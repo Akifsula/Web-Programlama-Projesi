@@ -2,14 +2,6 @@
 
 <h2>Kayıt Ol</h2>
 
-
-        @if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @ViewData["ErrorMessage"]
-    </div>
-}
-
 <form asp-action="Register" method="post">
     <div class="form-group">
         <label asp-for="AdSoyad"></label>
@@ -34,11 +26,4 @@
     <button type="submit" class="btn btn-primary">Kayıt Ol</button>
 </form>
 
-<p>Zaten bir hesabınız var mı? , <a href="/Account/Login">Giriş Yapın</a></p>
-
-        @if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+<p>Hesabınız varsa, <a href="/Account/Login">Giriş Yapın</a></p>

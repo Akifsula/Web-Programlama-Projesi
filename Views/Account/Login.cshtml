@@ -2,13 +2,6 @@
 
 <h2>Giriş Yap</h2>
 
-@if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @ViewData["ErrorMessage"]
-    </div>
-}
-
 <form asp-action="Login" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
@@ -28,4 +21,3 @@
 </form>
 
 <p>Hesabınız yok mu? <a href="/Account/Register">Kayıt Olun</a></p>
-
