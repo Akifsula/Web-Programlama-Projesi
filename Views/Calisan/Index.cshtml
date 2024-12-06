@@ -1,0 +1,22 @@
+﻿@model List<KuaforYonetim.Models.Calisan>
+
+@{
+    ViewData["Title"] = "Çalışanlar";
+}
+
+<h1>Çalışanlar</h1>
+<div class="row">
+    @foreach (var calisan in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@calisan.AdSoyad</h5>
+                    <p class="card-text">@calisan.UzmanlikAlanlari</p>
+                    <a href="/Calisan/Detay/@calisan.CalisanId" class="btn btn-primary">Detay</a>
+                </div>
+            </div>
+        </div>
+    }
+}
+</div>

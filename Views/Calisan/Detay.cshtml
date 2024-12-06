@@ -1,0 +1,17 @@
+﻿@model KuaforYonetim.Models.Calisan
+
+<h2>@Model.AdSoyad</h2>
+
+<div>
+    <strong>Uzmanlık Alanları:</strong> @Model.UzmanlikAlanlari
+</div>
+<div>
+    <strong>Çalışma Saatleri:</strong> 
+    @foreach (var uygunluk in Model.Uygunluklar)
+    {
+        <div>
+            @uygunluk.Gun: @uygunluk.BaslangicSaati - @uygunluk.BitisSaati
+        </div>
+    }
+</div>
+<a href="/Randevu/Ekle?calisanId=@Model.CalisanId" class="btn btn-primary">Randevu Al</a>

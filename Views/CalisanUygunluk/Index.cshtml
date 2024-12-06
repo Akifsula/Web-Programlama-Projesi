@@ -1,0 +1,27 @@
+﻿@model List<KuaforYonetim.Models.CalisanUygunluk>
+@{
+    ViewBag.Title = "Çalışan Uygunluk Listesi";
+}
+
+<h1>Çalışan Uygunlukları</h1>
+<a href="/CalisanUygunluk/Ekle?calisanId=@ViewBag.CalisanId" class="btn btn-primary">Yeni Uygunluk Ekle</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Gün</th>
+            <th>Başlangıç Saati</th>
+            <th>Bitiş Saati</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uygunluk in Model)
+        {
+            <tr>
+                <td>@uygunluk.Gun</td>
+                <td>@uygunluk.BaslangicSaati</td>
+                <td>@uygunluk.BitisSaati</td>
+            </tr>
+        }
+    </tbody>
+</table>

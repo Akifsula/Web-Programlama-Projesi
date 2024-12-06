@@ -1,0 +1,21 @@
+﻿@model List<KuaforYonetim.Models.Hizmet>
+
+@{
+    ViewData["Title"] = "Hizmetler";
+}
+
+<h1>Hizmetler</h1>
+<div class="row">
+    @foreach (var hizmet in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@hizmet.Ad</h5>
+                    <p class="card-text">Ücret: @hizmet.Ucret ₺</p>
+                    <p class="card-text">Tahmini Süre: @hizmet.TahminiSure</p>
+                </div>
+            </div>
+        </div>
+    }
+}
