@@ -6,21 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-// Veritabaný baðlantýsý
+// Veritabaný baðlantýsýný yapýlandýr
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity servisleri
+// Identity servisini ekle
 builder.Services.AddIdentity<Kullanici, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
-
-
 
 var app = builder.Build();
 
@@ -32,8 +27,8 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    
+    //app.UseHsts();
 }
 
 app.UseHttpsRedirection();

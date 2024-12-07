@@ -62,16 +62,17 @@ namespace KuaforYonetim.Controllers
 
                 if (result.Succeeded)
                 {
+                    // Kayıt başarılı
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
 
+                // Kayıt başarısız
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             return View(model);
         }
 
