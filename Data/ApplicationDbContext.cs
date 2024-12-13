@@ -8,21 +8,35 @@ namespace KuaforYonetim.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        //Veri Tabanı Tablolarım
+        // Veri Tabanı Tablolarım
         public DbSet<Randevu> Randevular { get; set; }
         public DbSet<Calisan> Calisanlar { get; set; }
         public DbSet<Hizmet> Hizmetler { get; set; }
-
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // Hizmet tablosundaki 'Ucret' sütunu için tür tanımı
             modelBuilder.Entity<Hizmet>()
                 .Property(h => h.Ucret)
                 .HasColumnType("decimal(18,2)");
+
+            // Çalışanlar için başlangıç verileri (Seed Data)
+            modelBuilder.Entity<Calisan>().HasData(
+                new Calisan
+                {
+                    CalisanId = 1,
+                    AdSoyad = "Ahmet Yılmaz",
+                    UzmanlikAlanlari = "Saç Kesimi, Sakal Traşı"
+                },
+                new Calisan
+                {
+                    CalisanId = 2,
+                    AdSoyad = "Mehmet Kaya",
+                    UzmanlikAlanlari = "Boyama, Saç Şekillendirme"
+                }
+            );
         }
     }
 }

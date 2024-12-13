@@ -22,13 +22,11 @@ var app = builder.Build();
 
 
 
-
-// Configure the HTTP request pipeline.
+// Uygulamanýn hata yönetimi için ayar
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    
-    //app.UseHsts();
+    //app.UseHsts(); 
 }
 
 app.UseHttpsRedirection();

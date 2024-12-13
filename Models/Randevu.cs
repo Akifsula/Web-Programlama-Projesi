@@ -19,5 +19,8 @@ namespace KuaforYonetim.Models
         public int HizmetId { get; set; }
 
         public Hizmet Hizmet { get; set; }
+
+        public string KullaniciId { get; set; } // Kullanıcıyla ilişkilendirmek için
+        public Kullanici Kullanici { get; set; } // Navigasyon özelliği
     }
 }

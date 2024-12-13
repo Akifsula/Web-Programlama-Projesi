@@ -1,41 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using KuaforYonetim.Models;
+using KuaforYonetim.Data;
 
 namespace KuaforYonetim.Controllers
 {
     public class CalisanController : Controller
     {
-        // Örnek çalışan listesi (ileride veritabanına bağlanacak)
-        private static List<Calisan> calisanlar = new List<Calisan>
+        private readonly ApplicationDbContext _context;
+
+        public CalisanController(ApplicationDbContext context)
         {
-            new Calisan { CalisanId = 1, AdSoyad = "Ahmet Yılmaz", UzmanlikAlanlari = "Saç Kesimi, Sakal Traşı" },
-            new Calisan { CalisanId = 2, AdSoyad = "Mehmet Kaya", UzmanlikAlanlari = "Saç Boyama, Fön Çekimi" }
-        };
+            _context = context;
+        }
 
         public IActionResult Index()
         {
+            var calisanlar = _context.Calisanlar.ToList();
             return View(calisanlar);
         }
 
-        public IActionResult Detay(int id)
-        {
-            var calisan = calisanlar.FirstOrDefault(c => c.CalisanId == id);
-            if (calisan == null) return NotFound();
-            return View(calisan);
-        }
-
-        public IActionResult Ekle()
-        {
-            return View();
-        }
+        public IActionResult Ekle() => View();
 
         [HttpPost]
         public IActionResult Ekle(Calisan calisan)
         {
             if (ModelState.IsValid)
             {
-                calisan.CalisanId = calisanlar.Count + 1; // Örnek için ID ataması
-                calisanlar.Add(calisan);
+                _context.Calisanlar.Add(calisan);
+                _context.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(calisan);

@@ -4,6 +4,7 @@ using KuaforYonetim.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KuaforYonetim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241213103736_AddCalisanTable")]
+    partial class AddCalisanTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,20 +44,6 @@ namespace KuaforYonetim.Migrations
                     b.HasKey("CalisanId");
 
                     b.ToTable("Calisanlar");
-
-                    b.HasData(
-                        new
-                        {
-                            CalisanId = 1,
-                            AdSoyad = "Ahmet Yılmaz",
-                            UzmanlikAlanlari = "Saç Kesimi, Sakal Traşı"
-                        },
-                        new
-                        {
-                            CalisanId = 2,
-                            AdSoyad = "Mehmet Kaya",
-                            UzmanlikAlanlari = "Boyama, Saç Şekillendirme"
-                        });
                 });
 
             modelBuilder.Entity("KuaforYonetim.Models.CalisanUygunluk", b =>
@@ -198,10 +186,6 @@ namespace KuaforYonetim.Migrations
                     b.Property<int>("HizmetId")
                         .HasColumnType("int");
 
-                    b.Property<string>("KullaniciId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("Tarih")
                         .HasColumnType("datetime2");
 
@@ -210,8 +194,6 @@ namespace KuaforYonetim.Migrations
                     b.HasIndex("CalisanId");
 
                     b.HasIndex("HizmetId");
-
-                    b.HasIndex("KullaniciId");
 
                     b.ToTable("Randevular");
                 });
@@ -381,17 +363,9 @@ namespace KuaforYonetim.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KuaforYonetim.Models.Kullanici", "Kullanici")
-                        .WithMany()
-                        .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Calisan");
 
                     b.Navigation("Hizmet");
-
-                    b.Navigation("Kullanici");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

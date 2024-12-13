@@ -1,0 +1,22 @@
+﻿@model IEnumerable<KuaforYonetim.Models.Randevu>
+
+<h2>Randevularım</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tarih</th>
+            <th>Çalışan</th>
+            <th>Hizmet</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var randevu in Model)
+        {
+            <tr>
+                <td>@randevu.Tarih.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@randevu.Calisan.AdSoyad</td>
+                <td>@randevu.Hizmet.Ad</td>
+            </tr>
+        }
+    </tbody>
+</table>
