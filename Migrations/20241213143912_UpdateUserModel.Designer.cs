@@ -4,6 +4,7 @@ using KuaforYonetim.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KuaforYonetim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241213143912_UpdateUserModel")]
+    partial class UpdateUserModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,22 +115,6 @@ namespace KuaforYonetim.Migrations
                     b.HasIndex("CalisanId");
 
                     b.ToTable("Hizmetler");
-
-                    b.HasData(
-                        new
-                        {
-                            HizmetId = 1,
-                            Ad = "Saç Kesimi",
-                            TahminiSure = new TimeSpan(0, 0, 30, 0, 0),
-                            Ucret = 250m
-                        },
-                        new
-                        {
-                            HizmetId = 2,
-                            Ad = "Sakal Traşı",
-                            TahminiSure = new TimeSpan(0, 0, 10, 0, 0),
-                            Ucret = 100m
-                        });
                 });
 
             modelBuilder.Entity("KuaforYonetim.Models.Kullanici", b =>

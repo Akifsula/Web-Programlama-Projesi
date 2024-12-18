@@ -22,6 +22,23 @@ namespace KuaforYonetim.Data
                 .Property(h => h.Ucret)
                 .HasColumnType("decimal(18,2)");
 
+            modelBuilder.Entity<Hizmet>().HasData(
+    new Hizmet
+    {
+        HizmetId = 1,
+        Ad = "Saç Kesimi",
+        Ucret = 250,
+        TahminiSure = TimeSpan.FromMinutes(30)
+    },
+    new Hizmet
+    {
+        HizmetId = 2,
+        Ad = "Sakal Traşı",
+        Ucret = 100,
+        TahminiSure = TimeSpan.FromMinutes(10)
+    }
+);
+
             // Çalışanlar için başlangıç verileri (Seed Data)
             modelBuilder.Entity<Calisan>().HasData(
                 new Calisan
