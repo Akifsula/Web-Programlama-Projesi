@@ -1,4 +1,3 @@
-
 using KuaforYonetim.Data;
 using KuaforYonetim.Models;
 using Microsoft.AspNetCore.Identity;
@@ -11,9 +10,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity servisini ekle
-builder.Services.AddIdentity<Kullanici, IdentityRole>()
+builder.Services.AddIdentity<Kullanici, IdentityRole>() // ApplicationUser'ý kullanýyoruz
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+// Rolleri ekle
+builder.Services.AddScoped<RoleManager<IdentityRole>>();  // RoleManager'ý DI container'a ekle
 
 builder.Services.AddControllersWithViews();
 
@@ -27,16 +29,13 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 0;
 });
 
+
 var app = builder.Build();
-
-
-
 
 // Uygulamanýn hata yönetimi için ayar
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    //app.UseHsts(); 
 }
 
 app.UseHttpsRedirection();
@@ -51,3 +50,23 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// Rolleri oluþtur
+CreateRoles(app).Wait();
+
+// CreateRoles metodunun implementasyonu
+async Task CreateRoles(WebApplication app)
+{
+    var roleManager = app.Services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roleNames = { "Admin", "User" };
+
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+}

@@ -39,6 +39,9 @@ namespace KuaforYonetim.Data
     }
 );
 
+
+
+
             // Çalışanlar için başlangıç verileri (Seed Data)
             modelBuilder.Entity<Calisan>().HasData(
                 new Calisan

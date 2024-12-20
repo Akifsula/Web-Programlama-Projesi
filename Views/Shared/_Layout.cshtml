@@ -11,7 +11,6 @@
         @TempData["SuccessMessage"]
     </div>
 }
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -23,7 +22,7 @@
     <!-- Custom Styles -->
     <style>
         body {
-            background-image: url('/images/arkaplan5.jpg'); /* Kuaför temalı görsel */
+            background-image: url('/images/arkaplan5.jpg'); 
             background-size: cover;
             background-attachment: fixed;
             background-repeat: no-repeat;
@@ -79,9 +78,24 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/Randevu/Randevularim">Randevularım</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Account/Login">Giriş Yap</a>
-                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("AdminPanel", "Admin")">Admin Paneli</a>
+                        </li>
+                    }
+                    else if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Profile", "User")">Profilim</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Login", "Account")">Giriş Yap</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" href="/Account/Register">Kayıt Ol</a>
                     </li>
