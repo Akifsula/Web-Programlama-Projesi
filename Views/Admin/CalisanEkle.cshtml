@@ -1,0 +1,17 @@
+﻿@model KuaforYonetim.Models.Calisan
+
+<h2>Çalışan Ekle</h2>
+
+<form asp-action="CalisanEkle" method="post">
+    <div class="form-group">
+        <label asp-for="AdSoyad"></label>
+        <input asp-for="AdSoyad" class="form-control" />
+        <span asp-validation-for="AdSoyad" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UzmanlikAlanlari"></label>
+        <input asp-for="UzmanlikAlanlari" class="form-control" />
+        <span asp-validation-for="UzmanlikAlanlari" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

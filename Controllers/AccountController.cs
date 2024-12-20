@@ -18,28 +18,31 @@ namespace KuaforYonetim.Controllers
         }
 
         // Kullanıcı Giriş Sayfası
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        // Giriş Yapma İşlemi
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user != null)
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
+                if (result.Succeeded)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
-                    if (result.Succeeded)
+                    var user = await _userManager.FindByEmailAsync(model.Email);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles.Contains("Admin"))
                     {
-                        // Başarılı giriş sonrası yönlendirme
+                        // Admin için admin paneline yönlendir
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    else
+                    {
+                        // Normal kullanıcı için ana sayfaya yönlendir
                         return RedirectToAction("Index", "Home");
                     }
                 }
-                ModelState.AddModelError(string.Empty, "Geçersiz giriş denemesi.");
+
+                ModelState.AddModelError(string.Empty, "Geçersiz giriş bilgileri.");
             }
 
             return View(model);

@@ -2,6 +2,7 @@ using KuaforYonetim.Data;
 using KuaforYonetim.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Identity servisini ekle
-builder.Services.AddIdentity<Kullanici, IdentityRole>() // ApplicationUser'ý kullanýyoruz
+builder.Services.AddIdentity<Kullanici, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -49,24 +50,41 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
-
-// Rolleri oluþtur
-CreateRoles(app).Wait();
-
-// CreateRoles metodunun implementasyonu
-async Task CreateRoles(WebApplication app)
+// Varsayýlan admin oluþturma iþlemi
+using (var scope = app.Services.CreateScope())
 {
-    var roleManager = app.Services.GetRequiredService<RoleManager<IdentityRole>>();
+    var services = scope.ServiceProvider;
+    var userManager = services.GetRequiredService<UserManager<Kullanici>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-    string[] roleNames = { "Admin", "User" };
-
-    foreach (var roleName in roleNames)
+    // Admin rolü oluþturuluyor
+    if (!await roleManager.RoleExistsAsync("Admin"))
     {
-        var roleExist = await roleManager.RoleExistsAsync(roleName);
-        if (!roleExist)
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    // Varsayýlan admin kullanýcý
+    var adminUser = await userManager.FindByEmailAsync("B211210030@sakarya.edu.tr");
+    if (adminUser == null)
+    {
+        var newAdmin = new Kullanici
         {
-            await roleManager.CreateAsync(new IdentityRole(roleName));
+            UserName = "B211210030@sakarya.edu.tr",
+            Email = "B211210030@sakarya.edu.tr",
+            AdSoyad = "Admin Kullanýcý"
+        };
+        var result = await userManager.CreateAsync(newAdmin, "sau");
+
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(newAdmin, "Admin");
         }
     }
 }
+
+    app.Run();
+
+
+
+
+
