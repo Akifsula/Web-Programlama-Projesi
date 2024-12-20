@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using KuaforYonetim.Models;
 using KuaforYonetim.ViewModels;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace KuaforYonetim.Controllers
 {
@@ -17,31 +19,44 @@ namespace KuaforYonetim.Controllers
             _signInManager = signInManager;
         }
 
+
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
         // Kullanıcı Giriş Sayfası
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                var user = await _userManager.FindByEmailAsync(model.Email);
 
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    var user = await _userManager.FindByEmailAsync(model.Email);
-                    var roles = await _userManager.GetRolesAsync(user);
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
 
-                    if (roles.Contains("Admin"))
+                    if (result.Succeeded)
                     {
-                        // Admin için admin paneline yönlendir
-                        return RedirectToAction("Index", "Admin");
-                    }
-                    else
-                    {
-                        // Normal kullanıcı için ana sayfaya yönlendir
+                        // Kullanıcıya AdSoyad bilgisini Claim olarak ekle
+                        var claims = new List<Claim>
+                {
+                    new Claim("AdSoyad", user.AdSoyad ?? "Kullanıcı")
+                };
+
+                        // Yeni Claims ile kullanıcıyı yeniden oturum açtır
+                        var claimsIdentity = new ClaimsIdentity(claims, "Identity.Application");
+                        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                        await HttpContext.SignInAsync("Identity.Application", claimsPrincipal);
+
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
+                // Giriş başarısızsa hata göster
                 ModelState.AddModelError(string.Empty, "Geçersiz giriş bilgileri.");
             }
 
@@ -65,8 +80,10 @@ namespace KuaforYonetim.Controllers
 
                 if (result.Succeeded)
                 {
-                    // Kayıt başarılı
+                    // Kullanıcıyı hemen giriş yaptır
+                    await _userManager.AddClaimAsync(user, new Claim("AdSoyad", user.AdSoyad));
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -82,8 +99,8 @@ namespace KuaforYonetim.Controllers
         // Çıkış Yapma
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            await _signInManager.SignOutAsync(); // Kullanıcıyı çıkış yaptırır
+            return RedirectToAction("Index", "Home"); // Ana sayfaya yönlendirir
         }
     }
 }

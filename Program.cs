@@ -46,9 +46,12 @@ app.UseRouting();
 app.UseAuthentication(); // Identity için gerekli
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 // Varsayýlan admin oluþturma iþlemi
 using (var scope = app.Services.CreateScope())
@@ -71,7 +74,7 @@ using (var scope = app.Services.CreateScope())
         {
             UserName = "B211210030@sakarya.edu.tr",
             Email = "B211210030@sakarya.edu.tr",
-            AdSoyad = "Admin Kullanýcý"
+            AdSoyad = "Admin Akif"
         };
         var result = await userManager.CreateAsync(newAdmin, "sau");
 
