@@ -1,18 +1,4 @@
-﻿@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["Error"]
-    </div>
-}
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
@@ -81,6 +67,12 @@
                         if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
+                                <a class="nav-link" href="/Admin/Index">Admin Paneli</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Admin/Calisanlar">Çalışanlar</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="/Admin/Randevular">Randevular</a>
                             </li>
                         }
@@ -95,9 +87,7 @@
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link disabled">
-                                Merhaba, @User.Claims.FirstOrDefault(c => c.Type == "AdSoyad")?.Value ?? User.Identity.Name
-                            </a>
+                            <a class="nav-link disabled">Merhaba, @User.Claims.FirstOrDefault(c => c.Type == "AdSoyad")?.Value ?? User.Identity.Name</a>
                         </li>
                         <li class="nav-item">
                             <form method="post" asp-controller="Account" asp-action="Logout">

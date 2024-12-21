@@ -30,7 +30,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 0;
 });
 
-
 var app = builder.Build();
 
 // Uygulamanýn hata yönetimi için ayar
@@ -66,28 +65,34 @@ using (var scope = app.Services.CreateScope())
         await roleManager.CreateAsync(new IdentityRole("Admin"));
     }
 
-    // Varsayýlan admin kullanýcý
-    var adminUser = await userManager.FindByEmailAsync("B211210030@sakarya.edu.tr");
+    // Varsayýlan admin kullanýcýyý oluþtur ve role ata
+    const string adminEmail = "B211210030@sakarya.edu.tr";
+    const string adminPassword = "sau"; // Güçlü bir þifre kullanýn
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
     if (adminUser == null)
     {
         var newAdmin = new Kullanici
         {
-            UserName = "B211210030@sakarya.edu.tr",
-            Email = "B211210030@sakarya.edu.tr",
+            UserName = adminEmail,
+            Email = adminEmail,
             AdSoyad = "Admin Akif"
         };
-        var result = await userManager.CreateAsync(newAdmin, "sau");
+        var result = await userManager.CreateAsync(newAdmin, adminPassword);
 
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(newAdmin, "Admin");
         }
     }
+    else
+    {
+        // Admin kullanýcý mevcutsa role atanmýþ mý kontrol et
+        if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
 }
 
-    app.Run();
-
-
-
-
-
+app.Run();
