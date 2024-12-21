@@ -1,132 +1,128 @@
 ﻿@if (TempData["Error"] != null)
 {
-	<div class="alert alert-danger">
-		@TempData["Error"]
-	</div>
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
 }
 
 @if (TempData["SuccessMessage"] != null)
 {
-	<div class="alert alert-success">
-		@TempData["SuccessMessage"]
-	</div>
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
 }
 
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"] - Kuaför Yönetim Sistemi</title>
-	<!-- Bootstrap -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-	<!-- Custom Styles -->
-	<style>
-		body {
-			background-image: url('/images/arkaplan5.jpg'); /* Kuaför temalı görsel */
-			background-size: cover;
-			background-attachment: fixed;
-			background-repeat: no-repeat;
-			color: white;
-		}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Kuaför Yönetim Sistemi</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-image: url('/images/arkaplan5.jpg'); /* Kuaför temalı görsel */
+            background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: white;
+        }
 
-			body::before {
-				content: "";
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background: rgba(0, 0, 0, 0.6); /* Arkaplan için siyah filtre */
-				z-index: -1;
-			}
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6); /* Arkaplan için siyah filtre */
+                z-index: -1;
+            }
 
-		.navbar {
-			background: rgba(0, 0, 0, 0.8) !important; /* Navbarın yarı saydam görünümü */
-		}
+        .navbar {
+            background: rgba(0, 0, 0, 0.8) !important; /* Navbarın yarı saydam görünümü */
+        }
 
-		.navbar-brand {
-			font-weight: bold;
-			color: #ffc107 !important; /* Kuaför temasına uygun renk */
-		}
+        .navbar-brand {
+            font-weight: bold;
+            color: #ffc107 !important; /* Kuaför temasına uygun renk */
+        }
 
-		.nav-link {
-			color: white !important;
-		}
+        .nav-link {
+            color: white !important;
+        }
 
-			.nav-link:hover {
-				color: #ffc107 !important; /* Hover'da renk değişimi */
-			}
+            .nav-link:hover {
+                color: #ffc107 !important; /* Hover'da renk değişimi */
+            }
 
-		.container {
-			background: rgba(255, 255, 255, 0.9);
-			border-radius: 10px;
-			padding: 20px;
-			color: black;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		}
-	</style>
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            color: black;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="/">Kuaför Yönetim</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="/Calisan">Çalışanlar</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="/Hizmet">Hizmetler</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="/Randevu/Randevularim">Randevularım</a>
-					</li>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Kuaför Yönetim</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Admin/Randevular">Randevular</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Randevu/Randevularim">Randevularım</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Randevu/Ekle">Randevu Al</a>
+                            </li>
+                        }
 
-					@if (User.Identity.IsAuthenticated)
-					{
-						var adSoyad = User.Claims.FirstOrDefault(c => c.Type == "AdSoyad")?.Value;
+                        <li class="nav-item">
+                            <a class="nav-link disabled">
+                                Merhaba, @User.Claims.FirstOrDefault(c => c.Type == "AdSoyad")?.Value ?? User.Identity.Name
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" asp-controller="Account" asp-action="Logout">
+                                <button type="submit" class="btn btn-warning btn-sm nav-link text-dark">Çıkış Yap</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Account/Login">Giriş Yap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Account/Register">Kayıt Ol</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        @RenderBody()
+    </div>
 
-						if (User.IsInRole("Admin"))
-						{
-							adSoyad = "Admin Akif"; // Admin için özel isim
-						}
-						else
-						{
-							adSoyad ??= User.Identity.Name; // AdSoyad yoksa User.Identity.Name kullan
-						}
-
-						<li class="nav-item">
-							<a class="nav-link disabled" href="#">Merhaba, @adSoyad</a>
-						</li>
-						<li class="nav-item">
-							<form method="post" asp-controller="Account" asp-action="Logout">
-								<button type="submit" class="btn btn-warning btn-sm nav-link text-dark">Çıkış Yap</button>
-							</form>
-						</li>
-					}
-					else
-					{
-						<!-- Giriş yapılmamışsa Giriş Yap ve Kayıt Ol butonları -->
-						<li class="nav-item">
-							<a class="nav-link" href="/Account/Login">Giriş Yap</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/Account/Register">Kayıt Ol</a>
-						</li>
-					}
-				</ul>
-			</div>
-		</div>
-	</nav>
-	<div class="container mt-5">
-		@RenderBody()
-	</div>
-
-	<!-- Bootstrap Script -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

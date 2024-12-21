@@ -2,6 +2,13 @@
 
 namespace KuaforYonetim.Models
 {
+    public enum RandevuDurumu
+    {
+        Bekliyor,
+        Onaylandi,
+        Reddedildi
+    }
+
     public class Randevu
     {
         [Key]
@@ -12,15 +19,17 @@ namespace KuaforYonetim.Models
 
         [Required]
         public int CalisanId { get; set; }
-
         public Calisan Calisan { get; set; }
 
         [Required]
         public int HizmetId { get; set; }
-
         public Hizmet Hizmet { get; set; }
 
-        public string KullaniciId { get; set; } // Kullanıcıyla ilişkilendirmek için
-        public Kullanici Kullanici { get; set; } // Navigasyon özelliği
+        [Required]
+        public string KullaniciId { get; set; }
+        public Kullanici Kullanici { get; set; }
+
+        [Required]
+        public RandevuDurumu Durum { get; set; } = RandevuDurumu.Bekliyor;
     }
 }

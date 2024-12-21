@@ -40,23 +40,20 @@ namespace KuaforYonetim.Controllers
 
                     if (result.Succeeded)
                     {
-                        // Kullanıcıya AdSoyad bilgisini Claim olarak ekle
+                        // Oturum açarken Claim ekle
                         var claims = new List<Claim>
                 {
-                    new Claim("AdSoyad", user.AdSoyad ?? "Kullanıcı")
+                    new Claim(ClaimTypes.NameIdentifier, user.Id), // Kullanıcı ID'si
+                    new Claim("AdSoyad", user.AdSoyad ?? "Kullanıcı") // AdSoyad claim'i
                 };
 
-                        // Yeni Claims ile kullanıcıyı yeniden oturum açtır
-                        var claimsIdentity = new ClaimsIdentity(claims, "Identity.Application");
-                        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                        await HttpContext.SignInAsync("Identity.Application", claimsPrincipal);
+                        var claimsIdentity = new ClaimsIdentity(claims, "Custom");
+                        await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
 
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
-                // Giriş başarısızsa hata göster
                 ModelState.AddModelError(string.Empty, "Geçersiz giriş bilgileri.");
             }
 
