@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KuaforYonetim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241218174527_SeedHizmetData")]
-    partial class SeedHizmetData
+    [Migration("20241222165913_UpdateDatabaseAgain")]
+    partial class UpdateDatabaseAgain
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -211,6 +211,9 @@ namespace KuaforYonetim.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RandevuId"), 1L, 1);
 
                     b.Property<int>("CalisanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Durum")
                         .HasColumnType("int");
 
                     b.Property<int>("HizmetId")

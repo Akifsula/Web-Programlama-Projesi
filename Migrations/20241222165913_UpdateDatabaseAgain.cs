@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KuaforYonetim.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class UpdateDatabaseAgain : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -220,11 +220,19 @@ namespace KuaforYonetim.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Tarih = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CalisanId = table.Column<int>(type: "int", nullable: false),
-                    HizmetId = table.Column<int>(type: "int", nullable: false)
+                    HizmetId = table.Column<int>(type: "int", nullable: false),
+                    KullaniciId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Durum = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Randevular", x => x.RandevuId);
+                    table.ForeignKey(
+                        name: "FK_Randevular_AspNetUsers_KullaniciId",
+                        column: x => x.KullaniciId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Randevular_Calisanlar_CalisanId",
                         column: x => x.CalisanId,
@@ -237,6 +245,24 @@ namespace KuaforYonetim.Migrations
                         principalTable: "Hizmetler",
                         principalColumn: "HizmetId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Calisanlar",
+                columns: new[] { "CalisanId", "AdSoyad", "UzmanlikAlanlari" },
+                values: new object[,]
+                {
+                    { 1, "Ahmet Yılmaz", "Saç Kesimi, Sakal Traşı" },
+                    { 2, "Mehmet Kaya", "Boyama, Saç Şekillendirme" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Hizmetler",
+                columns: new[] { "HizmetId", "Ad", "CalisanId", "TahminiSure", "Ucret" },
+                values: new object[,]
+                {
+                    { 1, "Saç Kesimi", null, new TimeSpan(0, 0, 30, 0, 0), 250m },
+                    { 2, "Sakal Traşı", null, new TimeSpan(0, 0, 10, 0, 0), 100m }
                 });
 
             migrationBuilder.CreateIndex(
@@ -297,6 +323,11 @@ namespace KuaforYonetim.Migrations
                 name: "IX_Randevular_HizmetId",
                 table: "Randevular",
                 column: "HizmetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Randevular_KullaniciId",
+                table: "Randevular",
+                column: "KullaniciId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
