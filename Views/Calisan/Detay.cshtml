@@ -3,10 +3,16 @@
 <h2>@Model.AdSoyad</h2>
 
 <div>
-    <strong>Uzmanlık Alanları:</strong> @Model.UzmanlikAlanlari
+    <strong>Uzmanlık Alanları:</strong>
+    <ul>
+        @foreach (var hizmet in Model.CalisanHizmetler.Select(ch => ch.Hizmet))
+        {
+            <li>@hizmet.Ad</li>
+        }
+    </ul>
 </div>
 <div>
-    <strong>Çalışma Saatleri:</strong> 
+    <strong>Çalışma Saatleri:</strong>
     @foreach (var uygunluk in Model.Uygunluklar)
     {
         <div>

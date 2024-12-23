@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KuaforYonetim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241222165913_UpdateDatabaseAgain")]
-    partial class UpdateDatabaseAgain
+    [Migration("20241223081500_UpdateDatabaseVersion")]
+    partial class UpdateDatabaseVersion
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,10 +37,6 @@ namespace KuaforYonetim.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("UzmanlikAlanlari")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("CalisanId");
 
                     b.ToTable("Calisanlar");
@@ -49,14 +45,44 @@ namespace KuaforYonetim.Migrations
                         new
                         {
                             CalisanId = 1,
-                            AdSoyad = "Ahmet Yılmaz",
-                            UzmanlikAlanlari = "Saç Kesimi, Sakal Traşı"
+                            AdSoyad = "Ahmet Yılmaz"
                         },
                         new
                         {
                             CalisanId = 2,
-                            AdSoyad = "Mehmet Kaya",
-                            UzmanlikAlanlari = "Boyama, Saç Şekillendirme"
+                            AdSoyad = "Mehmet Kaya"
+                        });
+                });
+
+            modelBuilder.Entity("KuaforYonetim.Models.CalisanHizmet", b =>
+                {
+                    b.Property<int>("CalisanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HizmetId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CalisanId", "HizmetId");
+
+                    b.HasIndex("HizmetId");
+
+                    b.ToTable("CalisanHizmetler");
+
+                    b.HasData(
+                        new
+                        {
+                            CalisanId = 1,
+                            HizmetId = 1
+                        },
+                        new
+                        {
+                            CalisanId = 1,
+                            HizmetId = 2
+                        },
+                        new
+                        {
+                            CalisanId = 2,
+                            HizmetId = 2
                         });
                 });
 
@@ -370,6 +396,25 @@ namespace KuaforYonetim.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("KuaforYonetim.Models.CalisanHizmet", b =>
+                {
+                    b.HasOne("KuaforYonetim.Models.Calisan", "Calisan")
+                        .WithMany("CalisanHizmetler")
+                        .HasForeignKey("CalisanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KuaforYonetim.Models.Hizmet", "Hizmet")
+                        .WithMany("CalisanHizmetler")
+                        .HasForeignKey("HizmetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Calisan");
+
+                    b.Navigation("Hizmet");
+                });
+
             modelBuilder.Entity("KuaforYonetim.Models.CalisanUygunluk", b =>
                 {
                     b.HasOne("KuaforYonetim.Models.Calisan", "Calisan")
@@ -468,9 +513,16 @@ namespace KuaforYonetim.Migrations
 
             modelBuilder.Entity("KuaforYonetim.Models.Calisan", b =>
                 {
+                    b.Navigation("CalisanHizmetler");
+
                     b.Navigation("Hizmetler");
 
                     b.Navigation("Uygunluklar");
+                });
+
+            modelBuilder.Entity("KuaforYonetim.Models.Hizmet", b =>
+                {
+                    b.Navigation("CalisanHizmetler");
                 });
 #pragma warning restore 612, 618
         }

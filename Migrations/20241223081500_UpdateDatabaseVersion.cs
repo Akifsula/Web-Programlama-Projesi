@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KuaforYonetim.Migrations
 {
-    public partial class UpdateDatabaseAgain : Migration
+    public partial class UpdateDatabaseVersion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -55,8 +55,7 @@ namespace KuaforYonetim.Migrations
                 {
                     CalisanId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AdSoyad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UzmanlikAlanlari = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AdSoyad = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -213,6 +212,30 @@ namespace KuaforYonetim.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CalisanHizmetler",
+                columns: table => new
+                {
+                    CalisanId = table.Column<int>(type: "int", nullable: false),
+                    HizmetId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CalisanHizmetler", x => new { x.CalisanId, x.HizmetId });
+                    table.ForeignKey(
+                        name: "FK_CalisanHizmetler_Calisanlar_CalisanId",
+                        column: x => x.CalisanId,
+                        principalTable: "Calisanlar",
+                        principalColumn: "CalisanId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CalisanHizmetler_Hizmetler_HizmetId",
+                        column: x => x.HizmetId,
+                        principalTable: "Hizmetler",
+                        principalColumn: "HizmetId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Randevular",
                 columns: table => new
                 {
@@ -249,11 +272,11 @@ namespace KuaforYonetim.Migrations
 
             migrationBuilder.InsertData(
                 table: "Calisanlar",
-                columns: new[] { "CalisanId", "AdSoyad", "UzmanlikAlanlari" },
+                columns: new[] { "CalisanId", "AdSoyad" },
                 values: new object[,]
                 {
-                    { 1, "Ahmet Yılmaz", "Saç Kesimi, Sakal Traşı" },
-                    { 2, "Mehmet Kaya", "Boyama, Saç Şekillendirme" }
+                    { 1, "Ahmet Yılmaz" },
+                    { 2, "Mehmet Kaya" }
                 });
 
             migrationBuilder.InsertData(
@@ -264,6 +287,21 @@ namespace KuaforYonetim.Migrations
                     { 1, "Saç Kesimi", null, new TimeSpan(0, 0, 30, 0, 0), 250m },
                     { 2, "Sakal Traşı", null, new TimeSpan(0, 0, 10, 0, 0), 100m }
                 });
+
+            migrationBuilder.InsertData(
+                table: "CalisanHizmetler",
+                columns: new[] { "CalisanId", "HizmetId" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "CalisanHizmetler",
+                columns: new[] { "CalisanId", "HizmetId" },
+                values: new object[] { 1, 2 });
+
+            migrationBuilder.InsertData(
+                table: "CalisanHizmetler",
+                columns: new[] { "CalisanId", "HizmetId" },
+                values: new object[] { 2, 2 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -303,6 +341,11 @@ namespace KuaforYonetim.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CalisanHizmetler_HizmetId",
+                table: "CalisanHizmetler",
+                column: "HizmetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CalisanUygunluk_CalisanId",
@@ -346,6 +389,9 @@ namespace KuaforYonetim.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "CalisanHizmetler");
 
             migrationBuilder.DropTable(
                 name: "CalisanUygunluk");

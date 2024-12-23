@@ -12,11 +12,19 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">@calisan.AdSoyad</h5>
-                    <p class="card-text">@calisan.UzmanlikAlanlari</p>
+                    <p class="card-text">
+                        <strong>Uzmanlık Alanları:</strong>
+                        <ul>
+                            @foreach (var hizmet in calisan.CalisanHizmetler.Select(ch => ch.Hizmet))
+                            {
+                                <li>@hizmet.Ad</li>
+                            }
+                        </ul>
+                    </p>
                     <a href="/Calisan/Detay/@calisan.CalisanId" class="btn btn-primary">Detay</a>
                 </div>
             </div>
         </div>
     }
-}
+    }
 </div>

@@ -1,4 +1,4 @@
-﻿@model KuaforYonetim.Models.Calisan
+﻿@model KuaforYonetim.ViewModels.CalisanEkleViewModel
 
 <h2>Yeni Çalışan Ekle</h2>
 
@@ -8,8 +8,8 @@
         <input asp-for="AdSoyad" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="UzmanlikAlanlari"></label>
-        <input asp-for="UzmanlikAlanlari" class="form-control" />
+        <label>Uzmanlık Alanları</label>
+        <select asp-for="SelectedHizmetler" asp-items="@(new SelectList(Model.Hizmetler, "HizmetId", "Ad"))" class="form-control" multiple></select>
     </div>
     <button type="submit" class="btn btn-success">Çalışan Ekle</button>
 </form>

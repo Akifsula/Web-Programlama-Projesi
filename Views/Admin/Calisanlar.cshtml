@@ -15,7 +15,21 @@
         {
             <tr>
                 <td>@calisan.AdSoyad</td>
-                <td>@calisan.UzmanlikAlanlari</td>
+                <td>
+                    @if (calisan.CalisanHizmetler != null && calisan.CalisanHizmetler.Any())
+                    {
+                        <ul>
+                            @foreach (var hizmet in calisan.CalisanHizmetler.Select(ch => ch.Hizmet))
+                            {
+                                <li>@hizmet.Ad</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>Uzmanlık Alanı Yok</span>
+                    }
+                </td>
                 <td>
                     <a class="btn btn-danger" asp-action="CalisanSil" asp-route-id="@calisan.CalisanId">Sil</a>
                 </td>

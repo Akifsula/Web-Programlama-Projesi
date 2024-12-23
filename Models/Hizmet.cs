@@ -17,5 +17,7 @@ namespace KuaforYonetim.Models
 
         [Required]
         public TimeSpan TahminiSure { get; set; } // Tahmini işlem süresi
+        public ICollection<CalisanHizmet> CalisanHizmetler { get; set; } = new List<CalisanHizmet>();
+
     }
 }

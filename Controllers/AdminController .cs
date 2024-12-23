@@ -1,5 +1,6 @@
 ﻿using KuaforYonetim.Data;
 using KuaforYonetim.Models;
+using KuaforYonetim.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,27 +24,54 @@ namespace KuaforYonetim.Controllers
 
         public IActionResult Calisanlar()
         {
-            var calisanlar = _context.Calisanlar.ToList();
+            var calisanlar = _context.Calisanlar
+                .Include(c => c.CalisanHizmetler)
+                .ThenInclude(ch => ch.Hizmet)
+                .ToList();
             return View(calisanlar);
         }
 
         [HttpGet]
         public IActionResult CalisanEkle()
         {
-            return View();
+            var viewModel = new CalisanEkleViewModel
+            {
+                Hizmetler = _context.Hizmetler.ToList()
+            };
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult CalisanEkle(Calisan calisan)
+        public IActionResult CalisanEkle(CalisanEkleViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Calisanlar.Add(calisan);
+                var yeniCalisan = new Calisan
+                {
+                    AdSoyad = viewModel.AdSoyad
+                };
+
+                foreach (var hizmetId in viewModel.SelectedHizmetler)
+                {
+                    var hizmet = _context.Hizmetler.Find(hizmetId);
+                    if (hizmet != null)
+                    {
+                        yeniCalisan.CalisanHizmetler.Add(new CalisanHizmet
+                        {
+                            Calisan = yeniCalisan,
+                            Hizmet = hizmet
+                        });
+                    }
+                }
+
+                _context.Calisanlar.Add(yeniCalisan);
                 _context.SaveChanges();
                 TempData["SuccessMessage"] = "Çalışan başarıyla eklendi.";
                 return RedirectToAction("Calisanlar");
             }
-            return View(calisan);
+
+            viewModel.Hizmetler = _context.Hizmetler.ToList();
+            return View(viewModel);
         }
 
         public IActionResult CalisanSil(int id)
