@@ -88,12 +88,23 @@ namespace KuaforYonetim.Controllers
 
         public IActionResult Randevular()
         {
-            var randevular = _context.Randevular
+            var bekleyenRandevular = _context.Randevular
                 .Include(r => r.Calisan)
                 .Include(r => r.Hizmet)
+                .Include(r => r.Kullanici)
                 .Where(r => r.Durum == RandevuDurumu.Bekliyor)
                 .ToList();
-            return View(randevular);
+
+            var aktifRandevular = _context.Randevular
+                .Include(r => r.Calisan)
+                .Include(r => r.Hizmet)
+                .Include(r => r.Kullanici)
+                .Where(r => r.Durum == RandevuDurumu.Onaylandi)
+                .ToList();
+
+            ViewBag.AktifRandevular = aktifRandevular;
+
+            return View(bekleyenRandevular); // Sadece bekleyen randevular model olarak gönderiliyor
         }
 
         public IActionResult Onayla(int id)

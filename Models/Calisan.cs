@@ -13,7 +13,7 @@ namespace KuaforYonetim.Models
 
         
        
-        public List<CalisanUygunluk> Uygunluklar { get; set; } = new List<CalisanUygunluk>();
+        public List<CalisanUygunluk> CalisanUygunluklar { get; set; } = new List<CalisanUygunluk>(); // Yeni ilişki
 
         public List<Hizmet> Hizmetler { get; set; } = new List<Hizmet>();
         public ICollection<CalisanHizmet> CalisanHizmetler { get; set; } = new List<CalisanHizmet>();

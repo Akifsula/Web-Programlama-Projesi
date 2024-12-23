@@ -31,13 +31,24 @@ namespace KuaforYonetim.Controllers
             return View(randevular);
         }
 
+        [HttpGet]
         public IActionResult Ekle()
         {
-            var calisanlar = _context.Calisanlar.ToList();
+            var calisanlar = _context.Calisanlar
+                .Include(c => c.CalisanUygunluklar)
+                .Include(c => c.CalisanHizmetler)
+                .ThenInclude(ch => ch.Hizmet)
+                .ToList();
+
             var hizmetler = _context.Hizmetler.ToList();
+            var doluZamanlar = _context.Randevular
+                .Where(r => r.Durum == RandevuDurumu.Onaylandi)
+                .Select(r => r.Tarih)
+                .ToList();
 
             ViewBag.Calisanlar = calisanlar;
             ViewBag.Hizmetler = hizmetler;
+            ViewBag.DoluZamanlar = doluZamanlar;
 
             return View();
         }
@@ -48,6 +59,24 @@ namespace KuaforYonetim.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             randevu.KullaniciId = userId;
 
+            // Geçmiş tarih kontrolü
+            if (randevu.Tarih < DateTime.Now)
+            {
+                TempData["ErrorMessage"] = "Geçmiş bir tarih seçemezsiniz.";
+                return RedirectToAction("Ekle");
+            }
+
+            // Çakışma kontrolü
+            var randevuVar = _context.Randevular
+                .Any(r => r.CalisanId == randevu.CalisanId && r.Tarih == randevu.Tarih);
+
+            if (randevuVar)
+            {
+                TempData["ErrorMessage"] = "Bu saat için zaten bir randevu var.";
+                return RedirectToAction("Ekle");
+            }
+
+            // Randevuyu ekle
             _context.Randevular.Add(randevu);
             _context.SaveChanges();
 

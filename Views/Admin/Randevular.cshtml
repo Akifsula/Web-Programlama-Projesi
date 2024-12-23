@@ -1,27 +1,62 @@
 ﻿@model IEnumerable<KuaforYonetim.Models.Randevu>
 
-<h2>Bekleyen Randevular</h2>
-
+<h3>Bekleyen Randevular</h3>
 <table class="table">
     <thead>
         <tr>
+            <th>Randevu Sahibi</th>
             <th>Tarih</th>
             <th>Çalışan</th>
             <th>Hizmet</th>
+            <th>Durum</th>
             <th>İşlemler</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var randevu in Model)
+        @foreach (var randevu in Model)  // Bekleyen randevular
         {
             <tr>
+                <td>@randevu.Kullanici.AdSoyad</td>
                 <td>@randevu.Tarih.ToString("g")</td>
                 <td>@randevu.Calisan.AdSoyad</td>
                 <td>@randevu.Hizmet.Ad</td>
+                <td>@randevu.Durum</td>
                 <td>
-                    <a class="btn btn-success btn-sm" asp-action="Onayla" asp-route-id="@randevu.RandevuId">Onayla</a>
-                    <a class="btn btn-danger btn-sm" asp-action="Reddet" asp-route-id="@randevu.RandevuId">Reddet</a>
+                    <a asp-action="Onayla" asp-route-id="@randevu.RandevuId" class="btn btn-success btn-sm">Onayla</a>
+                    <a asp-action="Reddet" asp-route-id="@randevu.RandevuId" class="btn btn-danger btn-sm">Reddet</a>
                 </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Aktif Randevular</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Randevu Sahibi</th>
+            <th>Tarih</th>
+            <th>Çalışan</th>
+            <th>Hizmet</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (ViewBag.AktifRandevular != null)
+        {
+            @foreach (var randevu in ViewBag.AktifRandevular as List<KuaforYonetim.Models.Randevu>)
+            {
+                <tr>
+                    <td>@randevu.Kullanici.AdSoyad</td>
+                    <td>@randevu.Tarih.ToString("g")</td>
+                    <td>@randevu.Calisan.AdSoyad</td>
+                    <td>@randevu.Hizmet.Ad</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">Hiçbir aktif randevu bulunmamaktadır.</td>
             </tr>
         }
     </tbody>

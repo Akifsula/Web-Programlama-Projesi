@@ -33,6 +33,16 @@ namespace KuaforYonetim.Data
                 .HasForeignKey(ch => ch.HizmetId);
 
 
+
+            modelBuilder.Entity<Calisan>()
+        .HasMany(c => c.CalisanUygunluklar)
+        .WithOne(u => u.Calisan)
+        .HasForeignKey(u => u.CalisanId);
+
+
+
+
+
             // Hizmet tablosundaki 'Ucret' sütunu için tür tanımı
             modelBuilder.Entity<Hizmet>()
                 .Property(h => h.Ucret)
@@ -60,6 +70,11 @@ namespace KuaforYonetim.Data
                 new CalisanHizmet { CalisanId = 1, HizmetId = 2 },
                 new CalisanHizmet { CalisanId = 2, HizmetId = 2 }
             );
+
+
+
+
+
         }
     }
 }

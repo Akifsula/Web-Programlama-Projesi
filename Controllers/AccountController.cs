@@ -5,6 +5,8 @@ using KuaforYonetim.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using KuaforYonetim.Controllers;
+using KuaforYonetim.Data;
 
 namespace KuaforYonetim.Controllers
 {

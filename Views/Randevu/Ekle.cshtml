@@ -17,8 +17,22 @@
 
     <div class="form-group">
         <label asp-for="Tarih">Tarih</label>
-        <input asp-for="Tarih" type="datetime-local" class="form-control" />
+        <input asp-for="Tarih" type="datetime-local" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Tarih" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Randevu Al</button>
 </form>
+
+
+<script>
+    var doluZamanlar = @Html.Raw(Json.Serialize(ViewBag.DoluZamanlar));
+    document.getElementById('Tarih').addEventListener('change', function() {
+        var secilenTarih = new Date(this.value);
+        if (doluZamanlar.some(zaman => new Date(zaman).getTime() === secilenTarih.getTime())) {
+            alert('Bu tarih ve saat dolu. Lütfen başka bir zaman seçin.');
+            this.value = '';
+        }
+    });
+</script>
+

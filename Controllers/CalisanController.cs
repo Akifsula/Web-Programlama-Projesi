@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using KuaforYonetim.Models;
 using KuaforYonetim.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace KuaforYonetim.Controllers
 {
@@ -15,7 +16,11 @@ namespace KuaforYonetim.Controllers
 
         public IActionResult Index()
         {
-            var calisanlar = _context.Calisanlar.ToList();
+            var calisanlar = _context.Calisanlar
+                .Include(c => c.CalisanHizmetler) // CalisanHizmetler ilişkisinin yüklenmesi
+                .ThenInclude(ch => ch.Hizmet)    // Hizmet detaylarının da yüklenmesi
+                .ToList();
+
             return View(calisanlar);
         }
 
