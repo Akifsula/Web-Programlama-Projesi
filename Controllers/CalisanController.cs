@@ -14,6 +14,24 @@ namespace KuaforYonetim.Controllers
             _context = context;
         }
 
+
+        public IActionResult Detay(int id)
+        {
+            var calisan = _context.Calisanlar
+                .Include(c => c.CalisanHizmetler)
+                .ThenInclude(ch => ch.Hizmet)
+                .Include(c => c.CalisanUygunluklar)
+                .FirstOrDefault(c => c.CalisanId == id);
+
+            if (calisan == null)
+            {
+                return NotFound();
+            }
+
+            return View(calisan);
+        }
+
+
         public IActionResult Index()
         {
             var calisanlar = _context.Calisanlar
@@ -24,18 +42,26 @@ namespace KuaforYonetim.Controllers
             return View(calisanlar);
         }
 
+
+
         public IActionResult Ekle() => View();
 
         [HttpPost]
         public IActionResult Ekle(Calisan calisan)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Calisanlar.Add(calisan);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+
+                return View(calisan); // Model hatalıysa aynı görünümü tekrar döndür.
             }
-            return View(calisan);
+
+            _context.Calisanlar.Add(calisan);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

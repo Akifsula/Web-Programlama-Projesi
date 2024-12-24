@@ -1,0 +1,34 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Çalışan Uygunluk Takvimi";
+}
+
+<h2>Çalışan Uygunluk Takvimi</h2>
+<div id="calendar"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: @Html.Raw(Json.Serialize(ViewBag.Uygunluklar)),
+            selectable: true, // Takvimde seçim yapılabilir
+            dateClick: function (info) {
+                // Tarihe tıklanınca uygunluk ekleme modalını aç
+                var calisanId = @Model;
+                var start = info.dateStr + "T09:00"; // Varsayılan başlangıç saati
+                var end = info.dateStr + "T17:00";  // Varsayılan bitiş saati
+
+                window.location.href = `/Admin/UygunlukEkle?calisanId=${calisanId}&start=${start}&end=${end}`;
+            }
+        });
+
+        calendar.render();
+    });
+</script>

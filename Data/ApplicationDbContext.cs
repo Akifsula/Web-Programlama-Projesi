@@ -13,6 +13,7 @@ namespace KuaforYonetim.Data
         public DbSet<Calisan> Calisanlar { get; set; }
         public DbSet<Hizmet> Hizmetler { get; set; }
         public DbSet<CalisanHizmet> CalisanHizmetler { get; set; } // Yeni Ara Tablo
+        public DbSet<CalisanUygunluk> CalisanUygunluklar { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,15 +34,37 @@ namespace KuaforYonetim.Data
                 .HasForeignKey(ch => ch.HizmetId);
 
 
-
+            // Çalışan Uygunluk ilişkisi
             modelBuilder.Entity<Calisan>()
         .HasMany(c => c.CalisanUygunluklar)
         .WithOne(u => u.Calisan)
         .HasForeignKey(u => u.CalisanId);
+            // Uygunluk çakışmalarını engellemek için benzersiz indeks
+            modelBuilder.Entity<CalisanUygunluk>()
+                .HasIndex(u => new { u.CalisanId, u.Gun, u.BaslangicSaati, u.BitisSaati })
+                .IsUnique();
 
 
 
-
+            // Seed data for CalisanUygunluk
+            modelBuilder.Entity<CalisanUygunluk>().HasData(
+                new CalisanUygunluk
+                {
+                    UygunlukId = 1,
+                    CalisanId = 1,
+                    Gun = DayOfWeek.Monday,
+                    BaslangicSaati = new TimeSpan(9, 0, 0),
+                    BitisSaati = new TimeSpan(17, 0, 0)
+                },
+                new CalisanUygunluk
+                {
+                    UygunlukId = 2,
+                    CalisanId = 2,
+                    Gun = DayOfWeek.Tuesday,
+                    BaslangicSaati = new TimeSpan(10, 0, 0),
+                    BitisSaati = new TimeSpan(18, 0, 0)
+                }
+            );
 
             // Hizmet tablosundaki 'Ucret' sütunu için tür tanımı
             modelBuilder.Entity<Hizmet>()

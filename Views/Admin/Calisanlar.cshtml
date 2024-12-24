@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<KuaforYonetim.Models.Calisan>
 
 <h2>Çalışanlar</h2>
-
 <table class="table">
     <thead>
         <tr>
@@ -31,10 +30,11 @@
                     }
                 </td>
                 <td>
-                    <a class="btn btn-danger" asp-action="CalisanSil" asp-route-id="@calisan.CalisanId">Sil</a>
+                    <a href="/Calisan/Detay/@calisan.CalisanId" class="btn btn-info">Detay</a>
+                    <a href="/Admin/Uygunluklar?calisanId=@calisan.CalisanId" class="btn btn-primary">Uygunluk Yönetimi</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-<a class="btn btn-success" href="/Admin/CalisanEkle">Yeni Çalışan Ekle</a>
+<a href="/Admin/CalisanEkle" class="btn btn-success">Yeni Çalışan Ekle</a>

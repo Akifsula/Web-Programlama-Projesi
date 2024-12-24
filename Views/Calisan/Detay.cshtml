@@ -13,11 +13,11 @@
 </div>
 <div>
     <strong>Çalışma Saatleri:</strong>
-    @foreach (var uygunluk in Model.CalisanUygunluklar)
-    {
-        <div>
-            @uygunluk.Gun: @uygunluk.BaslangicSaati - @uygunluk.BitisSaati
-        </div>
-    }
+    <ul>
+        @foreach (var uygunluk in Model.CalisanUygunluklar)
+        {
+            <li>@uygunluk.Gun: @uygunluk.BaslangicSaati - @uygunluk.BitisSaati</li>
+        }
+    </ul>
 </div>
 <a href="/Randevu/Ekle?calisanId=@Model.CalisanId" class="btn btn-primary">Randevu Al</a>

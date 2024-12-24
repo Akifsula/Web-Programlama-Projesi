@@ -1,0 +1,33 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Randevu Takvimi";
+}
+
+<h2>Randevu Almak İçin Takvim</h2>
+<div id="calendar"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek', // Haftalık görünüm
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            },
+            events: @Html.Raw(Json.Serialize(ViewBag.Uygunluklar.Concat(ViewBag.DoluZamanlar))),
+            selectable: true, // Takvimden seçim yapılabilir
+            select: function (info) {
+                var calisanId = @Model;
+                var start = info.startStr; // ISO 8601 formatında başlangıç
+                var end = info.endStr;     // ISO 8601 formatında bitiş
+
+                window.location.href = `/Randevu/Ekle?calisanId=${calisanId}&start=${start}&end=${end}`;
+            }
+        });
+
+        calendar.render();
+    });
+</script>

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<KuaforYonetim.Models.CalisanUygunluk>
+
+<h2>Çalışan Uygunlukları</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Gün</th>
+            <th>Başlangıç Saati</th>
+            <th>Bitiş Saati</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uygunluk in Model)
+        {
+            <tr>
+                <td>@uygunluk.Gun</td>
+                <td>@uygunluk.BaslangicSaati</td>
+                <td>@uygunluk.BitisSaati</td>
+                <td>
+                    <a class="btn btn-warning" asp-action="UygunlukDuzenle" asp-route-id="@uygunluk.UygunlukId">Düzenle</a>
+                    <a class="btn btn-danger" asp-action="UygunlukSil" asp-route-id="@uygunluk.UygunlukId">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-primary" asp-action="UygunlukEkle" asp-route-calisanId="@ViewBag.CalisanId">Yeni Uygunluk Ekle</a>
+<a class="btn btn-secondary" asp-action="Calisanlar">Geri</a>

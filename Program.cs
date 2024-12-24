@@ -7,9 +7,18 @@ using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS yapýlandýrmasý
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
-
-// Javascript kodu.
+// JSON ayarlarý
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     {
@@ -49,10 +58,19 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// CORS middleware
+app.UseCors("AllowAll");
+
 app.UseAuthentication(); // Identity için gerekli
 app.UseAuthorization();
 

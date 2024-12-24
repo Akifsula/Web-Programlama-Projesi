@@ -1,0 +1,17 @@
+﻿@model KuaforYonetim.Models.Calisan
+
+<h2>Çalışan Ekle</h2>
+
+<form asp-action="Ekle" method="post">
+    <div class="form-group">
+        <label asp-for="AdSoyad"></label>
+        <input asp-for="AdSoyad" class="form-control" />
+        <span asp-validation-for="AdSoyad" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}

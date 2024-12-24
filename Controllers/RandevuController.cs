@@ -18,6 +18,34 @@ namespace KuaforYonetim.Controllers
             _context = context;
         }
 
+
+        public IActionResult RandevuTakvimi(int calisanId)
+        {
+            var uygunluklar = _context.CalisanUygunluklar
+                .Where(u => u.CalisanId == calisanId)
+                .Select(u => new
+                {
+                    title = $"Müsait: {u.BaslangicSaati} - {u.BitisSaati}",
+                    start = DateTime.Today.AddDays((int)u.Gun).Add(u.BaslangicSaati),
+                    end = DateTime.Today.AddDays((int)u.Gun).Add(u.BitisSaati)
+                }).ToList();
+
+            var doluZamanlar = _context.Randevular
+                .Where(r => r.CalisanId == calisanId && r.Durum == RandevuDurumu.Onaylandi)
+                .Select(r => new
+                {
+                    title = $"Dolu",
+                    start = r.Tarih.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    end = r.Tarih.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss") // Örnek: Randevu süresi 30 dakika
+                }).ToList();
+
+            ViewBag.Uygunluklar = uygunluklar;
+            ViewBag.DoluZamanlar = doluZamanlar;
+            ViewBag.CalisanId = calisanId;
+
+            return View();
+        }
+
         public IActionResult Randevularim()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -30,7 +58,6 @@ namespace KuaforYonetim.Controllers
 
             return View(randevular);
         }
-
         [HttpGet]
         public IActionResult Ekle()
         {
@@ -66,13 +93,45 @@ namespace KuaforYonetim.Controllers
                 return RedirectToAction("Ekle");
             }
 
-            // Çakışma kontrolü
-            var randevuVar = _context.Randevular
-                .Any(r => r.CalisanId == randevu.CalisanId && r.Tarih == randevu.Tarih);
+            // Çalışan uygunluğu kontrolü
+            var calisanUygunluklari = _context.CalisanUygunluklar
+                .Where(cu => cu.CalisanId == randevu.CalisanId)
+                .ToList();
 
-            if (randevuVar)
+            var uygunluk = calisanUygunluklari.Any(cu =>
+                cu.Gun == randevu.Tarih.DayOfWeek &&
+                randevu.Tarih.TimeOfDay >= cu.BaslangicSaati &&
+                randevu.Tarih.TimeOfDay <= cu.BitisSaati);
+
+            if (!uygunluk)
             {
-                TempData["ErrorMessage"] = "Bu saat için zaten bir randevu var.";
+                TempData["ErrorMessage"] = "Bu saat çalışanın uygunluk saatleri arasında değil.";
+                return RedirectToAction("Ekle");
+            }
+
+            // Çakışma kontrolü: Aynı çalışan ve aynı saat
+            if (_context.Randevular.Any(r =>
+                    r.CalisanId == randevu.CalisanId &&
+                    r.Tarih == randevu.Tarih))
+            {
+                TempData["ErrorMessage"] = "Bu saat dolu, lütfen başka bir zaman seçin.";
+                return RedirectToAction("Ekle");
+            }
+
+            // Çakışma kontrolü: Aynı kullanıcı ve aynı saat
+            if (_context.Randevular.Any(r =>
+                    r.KullaniciId == randevu.KullaniciId &&
+                    r.Tarih == randevu.Tarih))
+            {
+                TempData["ErrorMessage"] = "Aynı saat için birden fazla randevu alamazsınız.";
+                return RedirectToAction("Ekle");
+            }
+
+            // Hizmet kontrolü: Hizmet geçerli mi?
+            var hizmet = _context.Hizmetler.Find(randevu.HizmetId);
+            if (hizmet == null)
+            {
+                TempData["ErrorMessage"] = "Geçersiz bir hizmet seçimi yaptınız.";
                 return RedirectToAction("Ekle");
             }
 

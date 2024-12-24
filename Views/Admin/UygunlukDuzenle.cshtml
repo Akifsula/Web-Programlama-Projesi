@@ -1,0 +1,38 @@
+﻿@model KuaforYonetim.ViewModels.UygunlukViewModel
+
+<h2>Uygunluk Düzenle</h2>
+
+<form asp-action="UygunlukDuzenle" method="post">
+    <input type="hidden" asp-for="UygunlukId" />
+    <input type="hidden" asp-for="CalisanId" />
+
+    <div class="form-group">
+        <label asp-for="Gun">Gün</label>
+        @Html.DropDownListFor(
+                 model => model.Gun,
+                 new SelectList(
+                 Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().Select(day => new
+                 {
+                     Value = ((int)day).ToString(),
+                     Text = day.ToString()
+                 }),
+                 "Value", "Text", Model.Gun
+                 ),
+                 "Gün Seçiniz",
+                 new { @class = "form-control" }
+                 )
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BaslangicSaati">Başlangıç Saati</label>
+        <input type="time" asp-for="BaslangicSaati" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BitisSaati">Bitiş Saati</label>
+        <input type="time" asp-for="BitisSaati" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Güncelle</button>
+    <a asp-action="Uygunluklar" asp-route-calisanId="@Model.CalisanId" class="btn btn-secondary">İptal</a>
+</form>

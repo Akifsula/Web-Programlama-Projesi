@@ -4,12 +4,80 @@
 
 <form asp-action="CalisanEkle" method="post">
     <div class="form-group">
-        <label asp-for="AdSoyad"></label>
-        <input asp-for="AdSoyad" class="form-control" />
+        <label for="AdSoyad">Ad Soyad</label>
+        <input asp-for="AdSoyad" id="AdSoyad" class="form-control" />
+        <span asp-validation-for="AdSoyad" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label>Uzmanlık Alanları</label>
-        <select asp-for="SelectedHizmetler" asp-items="@(new SelectList(Model.Hizmetler, "HizmetId", "Ad"))" class="form-control" multiple></select>
+        <label for="SelectedHizmetler">Uzmanlık Alanları</label>
+        <select asp-for="SelectedHizmetler" asp-items="@(new SelectList(Model.Hizmetler, "HizmetId", "Ad"))" id="SelectedHizmetler" class="form-control" multiple>
+        </select>
+        <span asp-validation-for="SelectedHizmetler" class="text-danger"></span>
     </div>
+    <h3>Uygunluk Saatleri</h3>
+    <div id="uygunluklar-container">
+        <div class="uygunluk-row">
+            <div class="form-group">
+                <label for="Uygunluklar[0].Gun">Gün</label>
+                <select name="Uygunluklar[0].Gun" id="Uygunluklar[0].Gun" class="form-control">
+                    <option value="0">Pazar</option>
+                    <option value="1">Pazartesi</option>
+                    <option value="2">Salı</option>
+                    <option value="3">Çarşamba</option>
+                    <option value="4">Perşembe</option>
+                    <option value="5">Cuma</option>
+                    <option value="6">Cumartesi</option>
+                </select>
+                <span asp-validation-for="Uygunluklar[0].Gun" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Uygunluklar[0].BaslangicSaati">Başlangıç Saati</label>
+                <input type="time" name="Uygunluklar[0].BaslangicSaati" id="Uygunluklar[0].BaslangicSaati" class="form-control" />
+                <span asp-validation-for="Uygunluklar[0].BaslangicSaati" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="Uygunluklar[0].BitisSaati">Bitiş Saati</label>
+                <input type="time" name="Uygunluklar[0].BitisSaati" id="Uygunluklar[0].BitisSaati" class="form-control" />
+                <span asp-validation-for="Uygunluklar[0].BitisSaati" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addUygunluk()">Yeni Uygunluk Ekle</button>
     <button type="submit" class="btn btn-success">Çalışan Ekle</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<script>
+    let uygunlukIndex = 1;
+    function addUygunluk() {
+        const container = document.getElementById('uygunluklar-container');
+        const newRow = document.createElement('div');
+        newRow.className = 'uygunluk-row';
+        newRow.innerHTML = `
+            <div class="form-group">
+                <label for="Uygunluklar[${uygunlukIndex}].Gun">Gün</label>
+                <select name="Uygunluklar[${uygunlukIndex}].Gun" id="Uygunluklar[${uygunlukIndex}].Gun" class="form-control">
+                    <option value="0">Pazar</option>
+                    <option value="1">Pazartesi</option>
+                    <option value="2">Salı</option>
+                    <option value="3">Çarşamba</option>
+                    <option value="4">Perşembe</option>
+                    <option value="5">Cuma</option>
+                    <option value="6">Cumartesi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Uygunluklar[${uygunlukIndex}].BaslangicSaati">Başlangıç Saati</label>
+                <input type="time" name="Uygunluklar[${uygunlukIndex}].BaslangicSaati" id="Uygunluklar[${uygunlukIndex}].BaslangicSaati" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="Uygunluklar[${uygunlukIndex}].BitisSaati">Bitiş Saati</label>
+                <input type="time" name="Uygunluklar[${uygunlukIndex}].BitisSaati" id="Uygunluklar[${uygunlukIndex}].BitisSaati" class="form-control" />
+            </div>`;
+        container.appendChild(newRow);
+        uygunlukIndex++;
+    }
+</script>
