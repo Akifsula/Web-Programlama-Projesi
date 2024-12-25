@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KuaforYonetim.Migrations
 {
-    public partial class UpdateDatabaseVersion : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -169,21 +169,21 @@ namespace KuaforYonetim.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CalisanUygunluk",
+                name: "CalisanUygunluklar",
                 columns: table => new
                 {
                     UygunlukId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CalisanId = table.Column<int>(type: "int", nullable: false),
-                    Gun = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gun = table.Column<int>(type: "int", nullable: false),
                     BaslangicSaati = table.Column<TimeSpan>(type: "time", nullable: false),
                     BitisSaati = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CalisanUygunluk", x => x.UygunlukId);
+                    table.PrimaryKey("PK_CalisanUygunluklar", x => x.UygunlukId);
                     table.ForeignKey(
-                        name: "FK_CalisanUygunluk_Calisanlar_CalisanId",
+                        name: "FK_CalisanUygunluklar_Calisanlar_CalisanId",
                         column: x => x.CalisanId,
                         principalTable: "Calisanlar",
                         principalColumn: "CalisanId",
@@ -244,7 +244,7 @@ namespace KuaforYonetim.Migrations
                     Tarih = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CalisanId = table.Column<int>(type: "int", nullable: false),
                     HizmetId = table.Column<int>(type: "int", nullable: false),
-                    KullaniciId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    KullaniciId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     Durum = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -275,8 +275,8 @@ namespace KuaforYonetim.Migrations
                 columns: new[] { "CalisanId", "AdSoyad" },
                 values: new object[,]
                 {
-                    { 1, "Ahmet Yılmaz" },
-                    { 2, "Mehmet Kaya" }
+                    { 1, "Alperen Akcelik" },
+                    { 2, "Rauf Sula" }
                 });
 
             migrationBuilder.InsertData(
@@ -285,23 +285,29 @@ namespace KuaforYonetim.Migrations
                 values: new object[,]
                 {
                     { 1, "Saç Kesimi", null, new TimeSpan(0, 0, 30, 0, 0), 250m },
-                    { 2, "Sakal Traşı", null, new TimeSpan(0, 0, 10, 0, 0), 100m }
+                    { 2, "Sakal Traşı", null, new TimeSpan(0, 0, 10, 0, 0), 100m },
+                    { 3, "Saç&Sakal", null, new TimeSpan(0, 0, 40, 0, 0), 300m },
+                    { 4, "Saç Boyama", null, new TimeSpan(0, 1, 0, 0, 0), 150m }
                 });
 
             migrationBuilder.InsertData(
                 table: "CalisanHizmetler",
                 columns: new[] { "CalisanId", "HizmetId" },
-                values: new object[] { 1, 1 });
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 2, 4 }
+                });
 
             migrationBuilder.InsertData(
-                table: "CalisanHizmetler",
-                columns: new[] { "CalisanId", "HizmetId" },
-                values: new object[] { 1, 2 });
-
-            migrationBuilder.InsertData(
-                table: "CalisanHizmetler",
-                columns: new[] { "CalisanId", "HizmetId" },
-                values: new object[] { 2, 2 });
+                table: "CalisanUygunluklar",
+                columns: new[] { "UygunlukId", "BaslangicSaati", "BitisSaati", "CalisanId", "Gun" },
+                values: new object[,]
+                {
+                    { 1, new TimeSpan(0, 9, 0, 0, 0), new TimeSpan(0, 17, 0, 0, 0), 1, 1 },
+                    { 2, new TimeSpan(0, 10, 0, 0, 0), new TimeSpan(0, 18, 0, 0, 0), 2, 2 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -348,9 +354,10 @@ namespace KuaforYonetim.Migrations
                 column: "HizmetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CalisanUygunluk_CalisanId",
-                table: "CalisanUygunluk",
-                column: "CalisanId");
+                name: "IX_CalisanUygunluklar_CalisanId_Gun_BaslangicSaati_BitisSaati",
+                table: "CalisanUygunluklar",
+                columns: new[] { "CalisanId", "Gun", "BaslangicSaati", "BitisSaati" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hizmetler_CalisanId",
@@ -394,7 +401,7 @@ namespace KuaforYonetim.Migrations
                 name: "CalisanHizmetler");
 
             migrationBuilder.DropTable(
-                name: "CalisanUygunluk");
+                name: "CalisanUygunluklar");
 
             migrationBuilder.DropTable(
                 name: "Randevular");

@@ -43,12 +43,12 @@ namespace KuaforYonetim.Migrations
                         new
                         {
                             CalisanId = 1,
-                            AdSoyad = "Ahmet Yılmaz"
+                            AdSoyad = "Alperen Akcelik"
                         },
                         new
                         {
                             CalisanId = 2,
-                            AdSoyad = "Mehmet Kaya"
+                            AdSoyad = "Rauf Sula"
                         });
                 });
 
@@ -80,7 +80,7 @@ namespace KuaforYonetim.Migrations
                         new
                         {
                             CalisanId = 2,
-                            HizmetId = 2
+                            HizmetId = 4
                         });
                 });
 
@@ -172,6 +172,20 @@ namespace KuaforYonetim.Migrations
                             Ad = "Sakal Traşı",
                             TahminiSure = new TimeSpan(0, 0, 10, 0, 0),
                             Ucret = 100m
+                        },
+                        new
+                        {
+                            HizmetId = 3,
+                            Ad = "Saç&Sakal",
+                            TahminiSure = new TimeSpan(0, 0, 40, 0, 0),
+                            Ucret = 300m
+                        },
+                        new
+                        {
+                            HizmetId = 4,
+                            Ad = "Saç Boyama",
+                            TahminiSure = new TimeSpan(0, 1, 0, 0, 0),
+                            Ucret = 150m
                         });
                 });
 

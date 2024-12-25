@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KuaforYonetim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241223081500_UpdateDatabaseVersion")]
-    partial class UpdateDatabaseVersion
+    [Migration("20241225231251_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,12 +45,12 @@ namespace KuaforYonetim.Migrations
                         new
                         {
                             CalisanId = 1,
-                            AdSoyad = "Ahmet Yılmaz"
+                            AdSoyad = "Alperen Akcelik"
                         },
                         new
                         {
                             CalisanId = 2,
-                            AdSoyad = "Mehmet Kaya"
+                            AdSoyad = "Rauf Sula"
                         });
                 });
 
@@ -82,7 +82,7 @@ namespace KuaforYonetim.Migrations
                         new
                         {
                             CalisanId = 2,
-                            HizmetId = 2
+                            HizmetId = 4
                         });
                 });
 
@@ -103,15 +103,33 @@ namespace KuaforYonetim.Migrations
                     b.Property<int>("CalisanId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Gun")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Gun")
+                        .HasColumnType("int");
 
                     b.HasKey("UygunlukId");
 
-                    b.HasIndex("CalisanId");
+                    b.HasIndex("CalisanId", "Gun", "BaslangicSaati", "BitisSaati")
+                        .IsUnique();
 
-                    b.ToTable("CalisanUygunluk");
+                    b.ToTable("CalisanUygunluklar");
+
+                    b.HasData(
+                        new
+                        {
+                            UygunlukId = 1,
+                            BaslangicSaati = new TimeSpan(0, 9, 0, 0, 0),
+                            BitisSaati = new TimeSpan(0, 17, 0, 0, 0),
+                            CalisanId = 1,
+                            Gun = 1
+                        },
+                        new
+                        {
+                            UygunlukId = 2,
+                            BaslangicSaati = new TimeSpan(0, 10, 0, 0, 0),
+                            BitisSaati = new TimeSpan(0, 18, 0, 0, 0),
+                            CalisanId = 2,
+                            Gun = 2
+                        });
                 });
 
             modelBuilder.Entity("KuaforYonetim.Models.Hizmet", b =>
@@ -156,6 +174,20 @@ namespace KuaforYonetim.Migrations
                             Ad = "Sakal Traşı",
                             TahminiSure = new TimeSpan(0, 0, 10, 0, 0),
                             Ucret = 100m
+                        },
+                        new
+                        {
+                            HizmetId = 3,
+                            Ad = "Saç&Sakal",
+                            TahminiSure = new TimeSpan(0, 0, 40, 0, 0),
+                            Ucret = 300m
+                        },
+                        new
+                        {
+                            HizmetId = 4,
+                            Ad = "Saç Boyama",
+                            TahminiSure = new TimeSpan(0, 1, 0, 0, 0),
+                            Ucret = 150m
                         });
                 });
 
@@ -247,6 +279,7 @@ namespace KuaforYonetim.Migrations
 
                     b.Property<string>("KullaniciId")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Tarih")
@@ -418,7 +451,7 @@ namespace KuaforYonetim.Migrations
             modelBuilder.Entity("KuaforYonetim.Models.CalisanUygunluk", b =>
                 {
                     b.HasOne("KuaforYonetim.Models.Calisan", "Calisan")
-                        .WithMany("Uygunluklar")
+                        .WithMany("CalisanUygunluklar")
                         .HasForeignKey("CalisanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -515,9 +548,9 @@ namespace KuaforYonetim.Migrations
                 {
                     b.Navigation("CalisanHizmetler");
 
-                    b.Navigation("Hizmetler");
+                    b.Navigation("CalisanUygunluklar");
 
-                    b.Navigation("Uygunluklar");
+                    b.Navigation("Hizmetler");
                 });
 
             modelBuilder.Entity("KuaforYonetim.Models.Hizmet", b =>

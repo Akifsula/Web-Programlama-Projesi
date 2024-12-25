@@ -29,8 +29,8 @@ builder.Services.AddControllersWithViews()
 
 // Veritabaný baðlantýsýný yapýlandýr
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-           .ConfigureWarnings(w => w.Ignore(RelationalEventId.MultipleCollectionIncludeWarning)));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // Identity servisini ekle
 builder.Services.AddIdentity<Kullanici, IdentityRole>()

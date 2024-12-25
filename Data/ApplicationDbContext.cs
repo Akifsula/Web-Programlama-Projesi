@@ -74,7 +74,9 @@ namespace KuaforYonetim.Data
             // Seed data for Hizmetler
             modelBuilder.Entity<Hizmet>().HasData(
                 new Hizmet { HizmetId = 1, Ad = "Saç Kesimi", Ucret = 250, TahminiSure = TimeSpan.FromMinutes(30) },
-                new Hizmet { HizmetId = 2, Ad = "Sakal Traşı", Ucret = 100, TahminiSure = TimeSpan.FromMinutes(10) }
+                new Hizmet { HizmetId = 2, Ad = "Sakal Traşı", Ucret = 100, TahminiSure = TimeSpan.FromMinutes(10) },
+                new Hizmet { HizmetId = 3, Ad = "Saç&Sakal", Ucret = 300, TahminiSure = TimeSpan.FromMinutes(40) },
+                new Hizmet { HizmetId = 4, Ad = "Saç Boyama", Ucret = 150, TahminiSure = TimeSpan.FromMinutes(60) }
             );
 
 
@@ -83,15 +85,15 @@ namespace KuaforYonetim.Data
             
             // Seed data for Calisanlar
             modelBuilder.Entity<Calisan>().HasData(
-                new Calisan { CalisanId = 1, AdSoyad = "Ahmet Yılmaz" },
-                new Calisan { CalisanId = 2, AdSoyad = "Mehmet Kaya" }
+                new Calisan { CalisanId = 1, AdSoyad = "Alperen Akcelik" },
+                new Calisan { CalisanId = 2, AdSoyad = "Rauf Sula" }
             );
 
             // Seed data for CalisanHizmet (Relation)
             modelBuilder.Entity<CalisanHizmet>().HasData(
                 new CalisanHizmet { CalisanId = 1, HizmetId = 1 },
                 new CalisanHizmet { CalisanId = 1, HizmetId = 2 },
-                new CalisanHizmet { CalisanId = 2, HizmetId = 2 }
+                new CalisanHizmet { CalisanId = 2, HizmetId = 4 }
             );
 
 
