@@ -32,6 +32,10 @@
                 <td>
                     <a href="/Calisan/Detay/@calisan.CalisanId" class="btn btn-info">Detay</a>
                     <a href="/Admin/Uygunluklar?calisanId=@calisan.CalisanId" class="btn btn-primary">Uygunluk Yönetimi</a>
+                    <form asp-action="CalisanSil" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@calisan.CalisanId" />
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                    </form>
                 </td>
             </tr>
         }

@@ -21,12 +21,16 @@ namespace KuaforYonetim.Controllers
         public IActionResult UygunlukSil(int id)
         {
             var uygunluk = _context.CalisanUygunluklar.FirstOrDefault(u => u.UygunlukId == id);
-            if (uygunluk != null)
+            if (uygunluk == null)
             {
-                _context.CalisanUygunluklar.Remove(uygunluk);
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Uygunluk başarıyla silindi.";
+                TempData["ErrorMessage"] = "Uygunluk bulunamadı.";
+                return RedirectToAction("Uygunluklar", new { calisanId = uygunluk.CalisanId });
             }
+
+            _context.CalisanUygunluklar.Remove(uygunluk);
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Uygunluk başarıyla silindi.";
             return RedirectToAction("Uygunluklar", new { calisanId = uygunluk.CalisanId });
         }
 
@@ -233,15 +237,29 @@ namespace KuaforYonetim.Controllers
         }
 
 
+        [HttpPost]
         public IActionResult CalisanSil(int id)
         {
-            var calisan = _context.Calisanlar.Find(id);
-            if (calisan != null)
+            var calisan = _context.Calisanlar
+                .Include(c => c.CalisanUygunluklar)
+                .Include(c => c.CalisanHizmetler)
+                .FirstOrDefault(c => c.CalisanId == id);
+
+            if (calisan == null)
             {
-                _context.Calisanlar.Remove(calisan);
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Çalışan başarıyla silindi.";
+                TempData["ErrorMessage"] = "Çalışan bulunamadı.";
+                return RedirectToAction("Calisanlar");
             }
+
+            // İlişkili uygunlukları ve hizmetleri sil
+            _context.CalisanUygunluklar.RemoveRange(calisan.CalisanUygunluklar);
+            _context.CalisanHizmetler.RemoveRange(calisan.CalisanHizmetler);
+
+            // Çalışanı sil
+            _context.Calisanlar.Remove(calisan);
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Çalışan başarıyla silindi.";
             return RedirectToAction("Calisanlar");
         }
 

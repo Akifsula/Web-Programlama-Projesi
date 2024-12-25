@@ -20,7 +20,10 @@
                 <td>@uygunluk.BitisSaati</td>
                 <td>
                     <a class="btn btn-warning" asp-action="UygunlukDuzenle" asp-route-id="@uygunluk.UygunlukId">Düzenle</a>
-                    <a class="btn btn-danger" asp-action="UygunlukSil" asp-route-id="@uygunluk.UygunlukId">Sil</a>
+                    <form asp-action="UygunlukSil" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@uygunluk.UygunlukId" />
+                        <button type="submit" class="btn btn-danger">Sil</button>
+                    </form>
                 </td>
             </tr>
         }

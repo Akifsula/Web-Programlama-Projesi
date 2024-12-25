@@ -5,6 +5,8 @@
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    TempData["ErrorMessage"] = null;
+     <!-- Mesajın tekrarlamasını önler -->
 }
 @if (TempData["SuccessMessage"] != null)
 {
