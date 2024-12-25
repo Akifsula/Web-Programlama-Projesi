@@ -6,7 +6,6 @@
 {
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     TempData["ErrorMessage"] = null;
-    <!-- Mesajın tekrarlamasını önler -->
 }
 @if (TempData["SuccessMessage"] != null)
 {
@@ -29,28 +28,22 @@
     </div>
 
     <div class="form-group">
-        <label for="Tarih">Tarih ve Saat</label>
-        <input asp-for="Tarih" type="datetime-local" class="form-control" id="Tarih" required step="3600" />
-        <!-- step="3600" yalnızca saatlik aralıklara izin verir -->
+        <label for="Tarih">Tarih Seçimi</label>
+        <input id="Tarih" name="Tarih" type="date" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Saat">Saat Seçimi</label>
+        <select id="Saat" name="Saat" class="form-control" required>
+            <option value="">Saat Seçiniz</option>
+            @{
+                for (var i = 9; i <= 21; i++) // Örneğin 09:00 - 21:00 saat aralığı
+                {
+                    <option value="@i:00">@i:00</option>
+                }
+            }
+        </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Randevu Al</button>
 </form>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Dolu zamanları JSON formatında al
-        var doluZamanlar = @Html.Raw(Json.Serialize(ViewBag.DoluZamanlar));
-        var tarihInput = document.getElementById('Tarih');
-
-        tarihInput.addEventListener('change', function () {
-            var secilenTarih = new Date(this.value);
-
-            // Tarih çakışmasını kontrol et
-            if (doluZamanlar.some(zaman => new Date(zaman).getTime() === secilenTarih.getTime())) {
-                alert('Bu tarih ve saat dolu. Lütfen başka bir zaman seçin.');
-                this.value = '';
-            }
-        });
-    });
-</script>  

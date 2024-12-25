@@ -105,8 +105,18 @@ namespace KuaforYonetim.Controllers
 
 
         [HttpPost]
-        public IActionResult Ekle(Randevu randevu)
+        public IActionResult Ekle(string Tarih, string Saat, Randevu randevu)
         {
+            if (DateTime.TryParse($"{Tarih} {Saat}", out DateTime parsedDateTime))
+            {
+                randevu.Tarih = parsedDateTime;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Geçerli bir tarih ve saat giriniz.";
+                return RedirectToAction("Ekle");
+            }
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             randevu.KullaniciId = userId;
 
@@ -114,13 +124,6 @@ namespace KuaforYonetim.Controllers
             if (randevu.Tarih < DateTime.Now)
             {
                 TempData["ErrorMessage"] = "Geçmiş bir tarih seçemezsiniz.";
-                return RedirectToAction("Ekle");
-            }
-
-            // Saatlik aralık kontrolü
-            if (randevu.Tarih.Minute != 0 || randevu.Tarih.Second != 0)
-            {
-                TempData["ErrorMessage"] = "Lütfen yalnızca saatlik aralıklar seçin (ör. 9:00, 10:00).";
                 return RedirectToAction("Ekle");
             }
 
@@ -140,33 +143,14 @@ namespace KuaforYonetim.Controllers
                 return RedirectToAction("Ekle");
             }
 
-            // Çakışma kontrolü: Aynı çalışan ve aynı saat
+            // Çakışma kontrolü
             if (_context.Randevular.Any(r =>
-                    r.CalisanId == randevu.CalisanId &&
-                    r.Tarih == randevu.Tarih))
+                r.CalisanId == randevu.CalisanId && r.Tarih == randevu.Tarih))
             {
                 TempData["ErrorMessage"] = "Bu saat dolu, lütfen başka bir zaman seçin.";
                 return RedirectToAction("Ekle");
             }
 
-            // Çakışma kontrolü: Aynı kullanıcı ve aynı saat
-            if (_context.Randevular.Any(r =>
-                    r.KullaniciId == randevu.KullaniciId &&
-                    r.Tarih == randevu.Tarih))
-            {
-                TempData["ErrorMessage"] = "Aynı saat için birden fazla randevu alamazsınız.";
-                return RedirectToAction("Ekle");
-            }
-
-            // Hizmet kontrolü: Hizmet geçerli mi?
-            var hizmet = _context.Hizmetler.Find(randevu.HizmetId);
-            if (hizmet == null)
-            {
-                TempData["ErrorMessage"] = "Geçersiz bir hizmet seçimi yaptınız.";
-                return RedirectToAction("Ekle");
-            }
-
-            // Randevuyu ekle
             _context.Randevular.Add(randevu);
             _context.SaveChanges();
 
