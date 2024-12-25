@@ -46,6 +46,12 @@ namespace KuaforYonetim.Controllers
             return View();
         }
 
+
+
+
+
+
+
         public IActionResult Randevularim()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -58,6 +64,17 @@ namespace KuaforYonetim.Controllers
 
             return View(randevular);
         }
+
+
+
+
+
+
+
+
+
+
+
         [HttpGet]
         public IActionResult Ekle()
         {
@@ -80,6 +97,13 @@ namespace KuaforYonetim.Controllers
             return View();
         }
 
+
+
+
+
+
+
+
         [HttpPost]
         public IActionResult Ekle(Randevu randevu)
         {
@@ -90,6 +114,13 @@ namespace KuaforYonetim.Controllers
             if (randevu.Tarih < DateTime.Now)
             {
                 TempData["ErrorMessage"] = "Geçmiş bir tarih seçemezsiniz.";
+                return RedirectToAction("Ekle");
+            }
+
+            // Saatlik aralık kontrolü
+            if (randevu.Tarih.Minute != 0 || randevu.Tarih.Second != 0)
+            {
+                TempData["ErrorMessage"] = "Lütfen yalnızca saatlik aralıklar seçin (ör. 9:00, 10:00).";
                 return RedirectToAction("Ekle");
             }
 

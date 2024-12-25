@@ -1,11 +1,11 @@
-﻿@model KuaforYonetim.Models.Calisan
+﻿@model KuaforYonetim.ViewModels.CalisanDetayViewModel
 
-<h2>@Model.AdSoyad</h2>
+<h2>@Model.Calisan.AdSoyad</h2>
 
 <div>
     <strong>Uzmanlık Alanları:</strong>
     <ul>
-        @foreach (var hizmet in Model.CalisanHizmetler.Select(ch => ch.Hizmet))
+        @foreach (var hizmet in Model.Calisan.CalisanHizmetler.Select(ch => ch.Hizmet))
         {
             <li>@hizmet.Ad</li>
         }
@@ -14,10 +14,38 @@
 <div>
     <strong>Çalışma Saatleri:</strong>
     <ul>
-        @foreach (var uygunluk in Model.CalisanUygunluklar)
+        @foreach (var uygunluk in Model.Calisan.CalisanUygunluklar)
         {
             <li>@uygunluk.Gun: @uygunluk.BaslangicSaati - @uygunluk.BitisSaati</li>
         }
     </ul>
 </div>
-<a href="/Randevu/Ekle?calisanId=@Model.CalisanId" class="btn btn-primary">Randevu Al</a>
+
+<div>
+    <strong>Dolu Saatler:</strong>
+    <div class="row">
+        @foreach (var uygunluk in Model.Calisan.CalisanUygunluklar)
+        {
+            <div class="col-12">
+                <h4>@uygunluk.Gun</h4>
+                <div class="row">
+                    @{
+                        var start = uygunluk.BaslangicSaati;
+                        var end = uygunluk.BitisSaati;
+                        while (start < end)
+                        {
+                            var isDolu = Model.DoluRandevular.Any(r =>
+                            r.Tarih.TimeOfDay == start &&
+                            r.Tarih.DayOfWeek == uygunluk.Gun);
+
+                            <div class="col-1">
+                                <span class="badge @(isDolu ? "bg-danger" : "bg-success")">@start</span>
+                            </div>
+                            start = start.Add(new TimeSpan(1, 0, 0)); // 1 saat ekle
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>  

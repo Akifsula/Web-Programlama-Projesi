@@ -2,6 +2,7 @@
 using KuaforYonetim.Models;
 using KuaforYonetim.Data;
 using Microsoft.EntityFrameworkCore;
+using KuaforYonetim.ViewModels;
 
 namespace KuaforYonetim.Controllers
 {
@@ -28,7 +29,17 @@ namespace KuaforYonetim.Controllers
                 return NotFound();
             }
 
-            return View(calisan);
+            var doluRandevular = _context.Randevular
+                .Where(r => r.CalisanId == id && r.Durum == RandevuDurumu.Onaylandi)
+                .ToList();
+
+            var viewModel = new CalisanDetayViewModel
+            {
+                Calisan = calisan,
+                DoluRandevular = doluRandevular
+            };
+
+            return View(viewModel);
         }
 
 
