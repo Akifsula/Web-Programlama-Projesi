@@ -143,9 +143,11 @@ namespace KuaforYonetim.Controllers
                 return RedirectToAction("Ekle");
             }
 
-            // Çakışma kontrolü
+            // Sadece onaylanmış randevulara göre çakışma kontrolü
             if (_context.Randevular.Any(r =>
-                r.CalisanId == randevu.CalisanId && r.Tarih == randevu.Tarih))
+                r.CalisanId == randevu.CalisanId &&
+                r.Tarih == randevu.Tarih &&
+                r.Durum == RandevuDurumu.Onaylandi)) // Sadece Onaylandı durumundaki randevular kontrol edilir
             {
                 TempData["ErrorMessage"] = "Bu saat dolu, lütfen başka bir zaman seçin.";
                 return RedirectToAction("Ekle");
@@ -157,5 +159,6 @@ namespace KuaforYonetim.Controllers
             TempData["SuccessMessage"] = "Randevunuz başarıyla oluşturuldu.";
             return RedirectToAction("Randevularim");
         }
+
     }
 }
