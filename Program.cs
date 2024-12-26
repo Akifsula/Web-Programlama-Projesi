@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Globalization;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,6 +123,7 @@ using (var scope = app.Services.CreateScope())
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(newAdmin, "Admin");
+            await userManager.AddClaimAsync(newAdmin, new Claim("AdSoyad", newAdmin.AdSoyad));
         }
     }
     else
@@ -130,6 +132,12 @@ using (var scope = app.Services.CreateScope())
         if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+        // Admin için AdSoyad claim'i eksikse ekleniyor
+        var existingClaims = await userManager.GetClaimsAsync(adminUser);
+        if (!existingClaims.Any(c => c.Type == "AdSoyad"))
+        {
+            await userManager.AddClaimAsync(adminUser, new Claim("AdSoyad", adminUser.AdSoyad));
         }
     }
 }

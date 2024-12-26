@@ -60,7 +60,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Kuaför Yönetim</a>
+            <a class="navbar-brand" href="/">Kuaför Yönetim</a>  
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -90,14 +90,20 @@
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link disabled">Merhaba, @User.Claims.FirstOrDefault(c => c.Type == "AdSoyad")?.Value ?? User.Identity.Name</a>
-                        </li>
+                        
                         <li class="nav-item">
                             <form method="post" asp-controller="Account" asp-action="Logout">
                                 <button type="submit" class="btn btn-warning btn-sm nav-link text-dark">Çıkış Yap</button>
                             </form>
                         </li>
+                        <ul>
+                        <ul>
+                        <!-- Kullanıcı adı Çıkış Yap butonunun altında -->
+                        <div class="mt-2 text-center text-light">
+                                    Merhaba, @(User.Claims.FirstOrDefault(c => c.Type == "AdSoyad")?.Value ?? User.Identity.Name)
+                        </div>
+                        </ul>
+                        </ul>
                     }
                     else
                     {
