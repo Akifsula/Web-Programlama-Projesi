@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,11 @@ builder.Services.AddControllersWithViews()
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
     });
+
+// Dil desteði
+var cultureInfo = new CultureInfo("tr-TR");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 // Veritabaný baðlantýsýný yapýlandýr
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -82,6 +88,8 @@ app.UseEndpoints(endpoints =>
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
+
+
 
 // Varsayýlan admin oluþturma iþlemi
 using (var scope = app.Services.CreateScope())

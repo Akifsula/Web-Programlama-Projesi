@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<KuaforYonetim.Models.CalisanUygunluk>
+@using System.Globalization
 
 <h2>Çalışan Uygunlukları</h2>
 
@@ -15,7 +16,7 @@
         @foreach (var uygunluk in Model)
         {
             <tr>
-                <td>@uygunluk.Gun</td>
+                <td>@CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.GetDayName(uygunluk.Gun)</td>
                 <td>@uygunluk.BaslangicSaati</td>
                 <td>@uygunluk.BitisSaati</td>
                 <td>

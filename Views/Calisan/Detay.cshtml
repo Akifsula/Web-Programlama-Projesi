@@ -1,4 +1,5 @@
 ﻿@model KuaforYonetim.ViewModels.CalisanDetayViewModel
+@using System.Globalization
 
 <h2>@Model.Calisan.AdSoyad</h2>
 
@@ -16,7 +17,8 @@
     <ul>
         @foreach (var uygunluk in Model.Calisan.CalisanUygunluklar)
         {
-            <li>@uygunluk.Gun: @uygunluk.BaslangicSaati - @uygunluk.BitisSaati</li>
+            var turkishDayName = CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.GetDayName(uygunluk.Gun);
+            <li>@turkishDayName: @uygunluk.BaslangicSaati - @uygunluk.BitisSaati</li>
         }
     </ul>
 </div>
@@ -27,7 +29,7 @@
         @foreach (var uygunluk in Model.Calisan.CalisanUygunluklar)
         {
             <div class="col-12">
-                <h4>@uygunluk.Gun</h4>
+                <h4>@CultureInfo.GetCultureInfo("tr-TR").DateTimeFormat.GetDayName(uygunluk.Gun)</h4>
                 <div class="row">
                     @{
                         var start = uygunluk.BaslangicSaati;

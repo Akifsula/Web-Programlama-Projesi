@@ -10,7 +10,12 @@
     </div>
     <div class="form-group">
         <label for="SelectedHizmetler">Uzmanlık Alanları</label>
-        <select asp-for="SelectedHizmetler" asp-items="@(new SelectList(Model.Hizmetler, "HizmetId", "Ad"))" id="SelectedHizmetler" class="form-control" multiple>
+        <select asp-for="SelectedHizmetler"
+                asp-items="@(new SelectList(Model.Hizmetler, "HizmetId", "Ad"))"
+                id="SelectedHizmetler"
+                class="form-control"
+                name="SelectedHizmetler"
+                multiple>
         </select>
         <span asp-validation-for="SelectedHizmetler" class="text-danger"></span>
     </div>
