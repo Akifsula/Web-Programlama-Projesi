@@ -177,6 +177,21 @@ namespace KuaforYonetim.Controllers
                 .Include(c => c.CalisanHizmetler)
                 .ThenInclude(ch => ch.Hizmet)
                 .ToList();
+
+
+            // Her çalışanın verimliliğini hesaplayalım
+            var verimlilikListesi = _context.Calisanlar
+                .Select(c => new
+                {
+                    CalisanId = c.CalisanId,
+                    Verimlilik = _context.Randevular
+                        .Where(r => r.CalisanId == c.CalisanId && r.Durum == RandevuDurumu.Onaylandi)
+                        .Sum(r => r.Hizmet.Ucret)
+                })
+                .ToDictionary(x => x.CalisanId, x => x.Verimlilik);
+
+            ViewBag.VerimlilikListesi = verimlilikListesi;
+
             return View(calisanlar);
         }
 

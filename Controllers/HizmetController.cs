@@ -9,7 +9,9 @@ namespace KuaforYonetim.Controllers
         private static List<Hizmet> hizmetler = new List<Hizmet>
         {
             new Hizmet { HizmetId = 1, Ad = "Saç Kesimi", Ucret = 250, TahminiSure = TimeSpan.FromMinutes(30) },
-            new Hizmet { HizmetId = 2, Ad = "Sakal Traşı", Ucret = 100, TahminiSure = TimeSpan.FromMinutes(10) }
+            new Hizmet { HizmetId = 2, Ad = "Sakal Traşı", Ucret = 100, TahminiSure = TimeSpan.FromMinutes(10) },
+            new Hizmet { HizmetId = 3, Ad = "Saç&Sakal", Ucret = 300, TahminiSure = TimeSpan.FromMinutes(40) },
+            new Hizmet { HizmetId = 4, Ad = "Saç Boyama", Ucret = 150, TahminiSure = TimeSpan.FromMinutes(60) }
         };
 
         public IActionResult Index()

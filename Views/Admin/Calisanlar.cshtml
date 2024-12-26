@@ -6,6 +6,7 @@
         <tr>
             <th>Ad Soyad</th>
             <th>Uzmanlık Alanları</th>
+            <th>Verimlilik</th>
             <th>İşlemler</th>
         </tr>
     </thead>
@@ -27,6 +28,16 @@
                     else
                     {
                         <span>Uzmanlık Alanı Yok</span>
+                    }
+                </td>
+                <td>
+                    @if (ViewBag.VerimlilikListesi.ContainsKey(calisan.CalisanId))
+                    {
+                        @ViewBag.VerimlilikListesi[calisan.CalisanId].ToString("C2")
+                    }
+                    else
+                    {
+                        <span>0 TL</span>
                     }
                 </td>
                 <td>
