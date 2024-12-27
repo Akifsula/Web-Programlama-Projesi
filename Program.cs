@@ -66,14 +66,14 @@ builder.Services.Configure<IdentityOptions>(options =>
 var app = builder.Build();
 
 // Uygulamanýn hata yönetimi için ayar
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-}
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -89,10 +89,12 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapControllers(); // API controller'larý desteklemek için gerekli
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
+
 
 
 
