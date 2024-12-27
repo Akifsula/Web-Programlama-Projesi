@@ -1,0 +1,32 @@
+﻿@model KuaforYonetim.ViewModels.AIHairRecommendationViewModel
+
+<h2>Yapay Zeka Saç Önerisi</h2>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<form asp-action="AnalyzeImage" method="post">
+    <div class="form-group">
+        <label for="ImageUrl">Resim URL'si</label>
+        <input asp-for="ImageUrl" class="form-control" placeholder="Resim URL'si giriniz" />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="EditingType">Düzenleme Türü</label>
+        <select asp-for="EditingType" class="form-control">
+            <option value="both">Her İkisi</option>
+            <option value="hairstyle">Saç Stili</option>
+            <option value="color">Renk</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="ColorDescription">Renk Açıklaması</label>
+        <input asp-for="ColorDescription" class="form-control" placeholder="Örn: Sarı, Kızıl" />
+    </div>
+    <div class="form-group">
+        <label for="HairstyleDescription">Saç Stili Açıklaması</label>
+        <input asp-for="HairstyleDescription" class="form-control" placeholder="Örn: Bob Kesim, Mohawk" />
+    </div>
+    <button type="submit" class="btn btn-primary">Öneri Al</button>
+</form>  

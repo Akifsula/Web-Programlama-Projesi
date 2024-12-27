@@ -39,6 +39,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
+// yapay zeka için
+builder.Services.AddHttpClient();
+
+
 // Identity servisini ekle
 builder.Services.AddIdentity<Kullanici, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
