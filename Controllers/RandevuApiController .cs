@@ -5,6 +5,10 @@ using KuaforYonetim.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
+
+// Bu Controller dosyasını Veri tabanımdan API ile bilgi çekip kullanıcıyı göstermek için olusturdum
+// Asagıdaki kodlar ve yönlendirmelerle, uygunluk.js sınıfın ile çalışanların uygun olduğu gün ve saat verileri alınıp Randevular/Ekle.cshtml modal sınıfı ile kullanıcıya sunuluyor
+
 [Route("api/Randevu")]
 [ApiController]
 public class RandevuApiController : ControllerBase
@@ -70,5 +74,5 @@ public class RandevuApiController : ControllerBase
         }
     }
 
-    // https://localhost:7100/api/Randevu/uygunluklar/1  adresiyle apiyi test edebilirsin.
+    // https://localhost:7100/api/Randevu/uygunluklar/1  adresini Apimi test etmek için kullanıyorum. Sondaki rakam değiştirilip farklı ID numarasına sahip çalışan uygunlukları görülebilir.
 }

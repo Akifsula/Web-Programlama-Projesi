@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
+//Default tanımlamalar
+
 namespace KuaforYonetim.Controllers
 {
     public class HomeController : Controller

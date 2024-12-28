@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KuaforYonetim.Controllers
 {
-    [Authorize(Roles = "Admin")] // Sadece admin erişimi
+    // Sadece admin erişimi
+    [Authorize(Roles = "Admin")] 
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -47,7 +48,7 @@ namespace KuaforYonetim.Controllers
             {
                 UygunlukId = uygunluk.UygunlukId,
                 CalisanId = uygunluk.CalisanId,
-                Gun = (int)uygunluk.Gun, // Enum'dan int'e dönüştürme
+                Gun = (int)uygunluk.Gun, // Enum'dan int'e dönüştürme işlemi
                 BaslangicSaati = uygunluk.BaslangicSaati,
                 BitisSaati = uygunluk.BitisSaati
             };
@@ -64,7 +65,7 @@ namespace KuaforYonetim.Controllers
                 var mevcutUygunluk = _context.CalisanUygunluklar.Find(model.UygunlukId);
                 if (mevcutUygunluk != null)
                 {
-                    mevcutUygunluk.Gun = (DayOfWeek)model.Gun; // int'ten Enum'a dönüştürme
+                    mevcutUygunluk.Gun = (DayOfWeek)model.Gun; // int'ten Enum'a dönüştürme işlemş
                     mevcutUygunluk.BaslangicSaati = model.BaslangicSaati;
                     mevcutUygunluk.BitisSaati = model.BitisSaati;
 
@@ -179,7 +180,7 @@ namespace KuaforYonetim.Controllers
                 .ToList();
 
 
-            // Her çalışanın verimliliğini hesaplayalım
+            // Her çalışanın verimliliğini hesaplayan fonksiyonu sonradan ekledim
             var verimlilikListesi = _context.Calisanlar
                 .Select(c => new
                 {
@@ -299,18 +300,7 @@ namespace KuaforYonetim.Controllers
             return View(bekleyenRandevular); // Sadece bekleyen randevular model olarak gönderiliyor
         }
 
-        public IActionResult Onayla(int id)
-        {
-            var randevu = _context.Randevular.Find(id);
-            if (randevu != null)
-            {
-                randevu.Durum = RandevuDurumu.Onaylandi;
-                _context.SaveChanges();
-                TempData["SuccessMessage"] = "Randevu başarıyla onaylandı.";
-            }
-            return RedirectToAction("Randevular");
-        }
-
+        // Randevu onaylama ve reddetme fonksiyonları
         public IActionResult Reddet(int id)
         {
             var randevu = _context.Randevular.Find(id);
@@ -319,6 +309,18 @@ namespace KuaforYonetim.Controllers
                 randevu.Durum = RandevuDurumu.Reddedildi;
                 _context.SaveChanges();
                 TempData["SuccessMessage"] = "Randevu başarıyla reddedildi.";
+            }
+            return RedirectToAction("Randevular");
+        }
+
+        public IActionResult Onayla(int id)
+        {
+            var randevu = _context.Randevular.Find(id);
+            if (randevu != null)
+            {
+                randevu.Durum = RandevuDurumu.Onaylandi;
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Randevu başarıyla onaylandı.";
             }
             return RedirectToAction("Randevular");
         }

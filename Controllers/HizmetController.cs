@@ -5,7 +5,7 @@ namespace KuaforYonetim.Controllers
 {
     public class HizmetController : Controller
     {
-        // Örnek hizmet listesi
+        // Hizmetler Kısmında da listelenecek Hizmet degerleri
         private static List<Hizmet> hizmetler = new List<Hizmet>
         {
             new Hizmet { HizmetId = 1, Ad = "Saç Kesimi", Ucret = 250, TahminiSure = TimeSpan.FromMinutes(30) },
@@ -19,6 +19,8 @@ namespace KuaforYonetim.Controllers
             return View(hizmetler);
         }
 
+
+        // yukarıdaki tanımlanmış Default hizmetlerin dışında Admin tarafından sisteme Hizmet atama işlemi gerçekleştirmesini yapmadıgım icin aşağıdaki methotların viewlerini oluşturmadım
         public IActionResult Detay(int id)
         {
             var hizmet = hizmetler.FirstOrDefault(h => h.HizmetId == id);

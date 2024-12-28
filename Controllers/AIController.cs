@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
+//yapay zekayla alakalı mehtotları ve API çekimi için bu controllerı olusturdum
+
 public class AIController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;

@@ -2,6 +2,7 @@
 
 namespace KuaforYonetim.Models
 {
+    // Randevu durumları icin Enum tanımladım (default degeri randevu alındıgı an "Bekliyor" olacak)
     public enum RandevuDurumu
     {
         Bekliyor,

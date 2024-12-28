@@ -48,7 +48,7 @@ namespace KuaforYonetim.Controllers
             var calisanlar = _context.Calisanlar
                 .Include(c => c.CalisanHizmetler) // CalisanHizmetler ilişkisinin yüklenmesi
                 .ThenInclude(ch => ch.Hizmet)    // Hizmet detaylarının da yüklenmesi
-                .ToList();
+                .ToList();                      // Listeleme
 
             return View(calisanlar);
         }

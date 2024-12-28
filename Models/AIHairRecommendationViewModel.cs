@@ -9,13 +9,12 @@ namespace KuaforYonetim.ViewModels
         public string ImageUrl { get; set; }
 
       
-        public string? EditingType { get; set; }
+        public string? EditingType { get; set; } // Opsiyonel hale getirildi
 
-        public string? ColorDescription { get; set; }
+        public string? ColorDescription { get; set; } // Opsiyonel hale getirildi
 
-        public string? HairstyleDescription { get; set; }
+        public string? HairstyleDescription { get; set; } // Opsiyonel hale getirildi
 
-        // Sonuçlar için eklenen özellikler
         // Sonuçlar için eklenen özellikler
         public string? OriginalImageUrl { get; set; } // Opsiyonel hale getirildi
         public string? ProcessedImageUrl { get; set; } // Opsiyonel hale getirildi

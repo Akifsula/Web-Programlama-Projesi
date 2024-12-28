@@ -21,3 +21,5 @@ namespace KuaforYonetim.Models
 
     }
 }
+
+// hizmet.cs tanımladıgım icin bu dosyayı da silecegim.

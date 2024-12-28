@@ -89,7 +89,7 @@ namespace KuaforYonetim.Data
                 new Calisan { CalisanId = 2, AdSoyad = "Rauf Sula" }
             );
 
-            // Seed data for CalisanHizmet (Relation)
+            // Seed data for CalisanHizmet iliskisi
             modelBuilder.Entity<CalisanHizmet>().HasData(
                 new CalisanHizmet { CalisanId = 1, HizmetId = 1 },
                 new CalisanHizmet { CalisanId = 1, HizmetId = 2 },

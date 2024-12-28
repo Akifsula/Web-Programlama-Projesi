@@ -36,7 +36,7 @@ namespace KuaforYonetim.Controllers
                 {
                     title = $"Dolu",
                     start = r.Tarih.ToString("yyyy-MM-ddTHH:mm:ss"),
-                    end = r.Tarih.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss") // Örnek: Randevu süresi 30 dakika
+                    end = r.Tarih.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm:ss") // Örnek: Randevu sürelerini 1 saat aralıklarla ayarlamaya calıstım
                 }).ToList();
 
             ViewBag.Uygunluklar = uygunluklar;
@@ -45,10 +45,6 @@ namespace KuaforYonetim.Controllers
 
             return View();
         }
-
-
-
-
 
 
 
@@ -64,13 +60,6 @@ namespace KuaforYonetim.Controllers
 
             return View(randevular);
         }
-
-
-
-
-
-
-
 
 
 
@@ -96,10 +85,6 @@ namespace KuaforYonetim.Controllers
 
             return View();
         }
-
-
-
-
 
 
 
@@ -159,6 +144,5 @@ namespace KuaforYonetim.Controllers
             TempData["SuccessMessage"] = "Randevunuz başarıyla oluşturuldu.";
             return RedirectToAction("Randevularim");
         }
-
     }
 }

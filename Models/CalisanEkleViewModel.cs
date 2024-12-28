@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
+//Admin Tarafindan sisteme tanimlanacak yeni calisanlar icin
+
 namespace KuaforYonetim.ViewModels
 {
     public class CalisanEkleViewModel

@@ -29,14 +29,15 @@ builder.Services.AddControllersWithViews()
         options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
     });
 
-// Dil desteði
+// Dil desteði (Gun isimlerini turkce gostermek icin)
 var cultureInfo = new CultureInfo("tr-TR");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 // Veritabaný baðlantýsýný yapýlandýr
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .ConfigureWarnings(w => w.Ignore(RelationalEventId.MultipleCollectionIncludeWarning)));
 
 
 // yapay zeka için

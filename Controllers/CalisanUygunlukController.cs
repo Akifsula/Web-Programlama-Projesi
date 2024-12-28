@@ -5,7 +5,7 @@ namespace KuaforYonetim.Controllers
 {
     public class CalisanUygunlukController : Controller
     {
-        // Örnek veri (ileride veritabanına bağlanacak)
+        // Örnek veri 
         private static List<CalisanUygunluk> uygunluklar = new List<CalisanUygunluk>();
 
         public IActionResult Index(int calisanId)

@@ -7,3 +7,5 @@ namespace KuaforYonetim.Models
         public string AdSoyad { get; set; }
     }
 }
+
+// Identity oldugu icin diger degerleri otomatik olusturuyor. Bu yüzden Kullanıcıya sadece AdSoyad degeri atadım.

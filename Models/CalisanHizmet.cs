@@ -1,4 +1,7 @@
 ﻿namespace KuaforYonetim.Models
+
+    // Calisanlar ve uzmanlık alanı icin hizmet eşleşmeleri için gerekli degiskenlerim
+
 {
     public class CalisanHizmet
     {

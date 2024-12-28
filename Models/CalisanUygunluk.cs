@@ -11,7 +11,7 @@ namespace KuaforYonetim.Models
         [Required(ErrorMessage = "Çalışan ID'si zorunludur.")]
         public int CalisanId { get; set; }
 
-        // Nullable olarak tanımlayarak opsiyonel hale getiriyoruz
+        // Nullable olarak tanımlayarak hata almamak icin opsiyonel hale getirdim
         public Calisan? Calisan { get; set; }
 
         [Required(ErrorMessage = "Gün seçimi zorunludur.")]

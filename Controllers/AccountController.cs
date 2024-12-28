@@ -21,13 +21,20 @@ namespace KuaforYonetim.Controllers
             _signInManager = signInManager;
         }
 
-
-
+        // Giriş Yapma
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
+
+        // Çıkış Yapma
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync(); // Kullanıcıyı çıkış yaptırır
+            return RedirectToAction("Index", "Home"); // Ana sayfaya yönlendirir
+        }
+
         // Kullanıcı Giriş Sayfası
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -86,7 +93,7 @@ namespace KuaforYonetim.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Kayıt başarısız
+                // Kayıt başarısızsa hata döndür
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -95,11 +102,5 @@ namespace KuaforYonetim.Controllers
             return View(model);
         }
 
-        // Çıkış Yapma
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync(); // Kullanıcıyı çıkış yaptırır
-            return RedirectToAction("Index", "Home"); // Ana sayfaya yönlendirir
-        }
     }
 }

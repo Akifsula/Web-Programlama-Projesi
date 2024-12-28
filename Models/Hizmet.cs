@@ -13,10 +13,10 @@ namespace KuaforYonetim.Models
 
         [Required]
         [Range(0, 1000)]
-        public decimal Ucret { get; set; } // Hizmetin ücreti
+        public decimal Ucret { get; set; } // Hizmetin ücreti (Range degeri yeniden ayarlanabilir)
 
         [Required]
-        public TimeSpan TahminiSure { get; set; } // Tahmini işlem süresi
+        public TimeSpan TahminiSure { get; set; } // Tahmini işlem süresi ( en uzun süren islemimi 1 saat olarak ayarladım (sac boyama))
         public ICollection<CalisanHizmet> CalisanHizmetler { get; set; } = new List<CalisanHizmet>();
 
     }

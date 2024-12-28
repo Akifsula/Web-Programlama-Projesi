@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+// Kaydolma kısmı
+
 namespace KuaforYonetim.ViewModels
 {
     public class RegisterViewModel

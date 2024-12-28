@@ -1,10 +1,12 @@
 ﻿@model KuaforYonetim.ViewModels.AIHairRecommendationViewModel
 
+
 <h2>Yapay Zeka Saç Önerisi</h2>
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
+
 
 <form method="post" asp-action="AnalyzeImage">
     <div class="form-group">
@@ -30,3 +32,4 @@
     <button type="submit" class="btn btn-primary">Gönder</button>
 </form>
 
+     

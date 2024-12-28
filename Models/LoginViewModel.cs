@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+// Giris kısmı
+
 namespace KuaforYonetim.ViewModels
 {
     public class LoginViewModel
