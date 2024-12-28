@@ -6,27 +6,27 @@
     <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
 }
 
-<form asp-action="AnalyzeImage" method="post">
+<form method="post" asp-action="AnalyzeImage">
     <div class="form-group">
-        <label for="ImageUrl">Resim URL'si</label>
-        <input asp-for="ImageUrl" class="form-control" placeholder="Resim URL'si giriniz" />
-        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        <label for="imageUrl">Resim URL'si</label>
+        <input type="text" class="form-control" id="imageUrl" name="imageUrl" placeholder="Resim URL'si giriniz" required>
     </div>
     <div class="form-group">
-        <label for="EditingType">Düzenleme Türü</label>
-        <select asp-for="EditingType" class="form-control">
+        <label for="editingType">Düzenleme Türü</label>
+        <select class="form-control" id="editingType" name="editingType">
             <option value="both">Her İkisi</option>
             <option value="hairstyle">Saç Stili</option>
             <option value="color">Renk</option>
         </select>
     </div>
     <div class="form-group">
-        <label for="ColorDescription">Renk Açıklaması</label>
-        <input asp-for="ColorDescription" class="form-control" placeholder="Örn: Sarı, Kızıl" />
+        <label for="colorDescription">Renk Açıklaması</label>
+        <input type="text" class="form-control" id="colorDescription" name="colorDescription" placeholder="Örn: Sarı, Kızıl" required>
     </div>
     <div class="form-group">
-        <label for="HairstyleDescription">Saç Stili Açıklaması</label>
-        <input asp-for="HairstyleDescription" class="form-control" placeholder="Örn: Bob Kesim, Mohawk" />
+        <label for="hairstyleDescription">Saç Stili Açıklaması</label>
+        <input type="text" class="form-control" id="hairstyleDescription" name="hairstyleDescription" placeholder="Örn: Bob Kesim, Mohawk" required>
     </div>
-    <button type="submit" class="btn btn-primary">Öneri Al</button>
-</form>  
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>
+

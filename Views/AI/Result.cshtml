@@ -1,28 +1,21 @@
 ﻿@model KuaforYonetim.ViewModels.AIHairRecommendationViewModel
 
 @{
-    ViewData["Title"] = "AI Önerileri";
+    ViewData["Title"] = "Sonuçlar";
+    string processedImageUrl = ViewData["ProcessedImageUrl"] as string;
 }
 
-<h2>AI Tarafından Önerilen Saç Modelleri ve Renkler</h2>
+<h2>İşlenmiş Resim</h2>
+@if (!string.IsNullOrEmpty(processedImageUrl))
+{
+    <div>
+        <img src="@processedImageUrl" alt="İşlenmiş Resim" style="max-width: 100%; height: auto;" />
+    </div>
+}
+else
+{
+    <p>Sonuç bulunamadı.</p>
+}
 
-<div>
-    <h4>Orijinal Fotoğraf</h4>
-    <img src="@(!string.IsNullOrEmpty(Model.OriginalImageUrl) ? Model.OriginalImageUrl : "/images/placeholder.jpg")"
-         alt="Orijinal Fotoğraf"
-         style="max-width: 100%; height: auto;" />
-</div>
+<a href="/AI/Index" class="btn btn-primary mt-3">Başka Bir Resim Yükle</a>
 
-<div>
-    <h4>İşlenmiş Fotoğraf</h4>
-    <img src="@(!string.IsNullOrEmpty(Model.ProcessedImageUrl) ? Model.ProcessedImageUrl : "/images/placeholder.jpg")"
-         alt="İşlenmiş Fotoğraf"
-         style="max-width: 100%; height: auto;" />
-</div>
-
-<div>
-    <h4>Öneriler</h4>
-    <p>@Model.Suggestions</p>
-</div>
-
-<a href="/AI/Index" class="btn btn-primary mt-3">Başka Bir Fotoğraf Yükle</a>

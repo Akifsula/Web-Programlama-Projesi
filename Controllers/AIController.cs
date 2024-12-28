@@ -1,6 +1,5 @@
 ﻿using KuaforYonetim.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
@@ -16,88 +15,135 @@ public class AIController : Controller
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
     }
-
-    // GET: AI/Result
-    public IActionResult Result(string imageUrl, string processedImageUrl, string suggestions)
-    {
-        var viewModel = new AIHairRecommendationViewModel
-        {
-            OriginalImageUrl = imageUrl,
-            ProcessedImageUrl = processedImageUrl,
-            Suggestions = suggestions
-        };
-
-        return View(viewModel);
-    }
-
     [HttpGet]
     public IActionResult Index()
     {
-        return View(new AIHairRecommendationViewModel());
+        return View();
     }
-
     [HttpPost]
-    public async Task<IActionResult> AnalyzeImage(AIHairRecommendationViewModel model)
+    public async Task<IActionResult> AnalyzeImage(string imageUrl, string editingType, string colorDescription, string hairstyleDescription)
     {
-        if (!ModelState.IsValid)
-        {
-            TempData["ErrorMessage"] = "Lütfen tüm alanları doldurun.";
-            return View("Index", model);
-        }
-
-        var apiKey = _configuration["MagicApi:ApiKey"];
-        var apiUrl = $"{_configuration["MagicApi:BaseUrl"]}/hair";
+        string ApiUrl = $"{_configuration["MagicApi:BaseUrl"]}/hair";
+        string ApiKey = _configuration["MagicApi:ApiKey"];
 
         var requestData = new
         {
-            image = model.ImageUrl,
-            editing_type = model.EditingType,
-            color_description = model.ColorDescription,
-            hairstyle_description = model.HairstyleDescription
+            image = imageUrl,
+            editing_type = editingType,
+            color_description = colorDescription,
+            hairstyle_description = hairstyleDescription
         };
 
-        Console.WriteLine($"Request Data: {JsonConvert.SerializeObject(requestData)}");
-
-        var client = _httpClientFactory.CreateClient();
-        var requestContent = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
-        requestContent.Headers.Add("x-magicapi-key", apiKey);
-
-        var response = await client.PostAsync(apiUrl, requestContent);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            // API yanıtını oku
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"API Response Content: {responseContent}");
-
-            // Yanıtı işleme
-            dynamic json = JsonConvert.DeserializeObject(responseContent);
-
-            // Yanıtın içeriğini kontrol et
-            if (json?.result == null || string.IsNullOrEmpty(json?.result?.imageUrl?.ToString()))
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
             {
-                model.ProcessedImageUrl = "https://via.placeholder.com/300"; // Geçici resim
-                model.Suggestions = "Daha Kısa bir saç modeli düşünebilirsiniz ve Sacınızı griye boyama cesareti gösterirseniz pişman olmazsınız^^";
+                Content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json")
+            };
+            requestMessage.Headers.Add("x-magicapi-key", ApiKey);
+
+            var response = await _httpClientFactory.CreateClient().SendAsync(requestMessage);
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                dynamic json = JsonConvert.DeserializeObject(jsonResponse);
+                string requestId = json?.request_id;
+
+                Console.WriteLine($"Request ID: {requestId}");
+                TempData["RequestId"] = requestId;
+
+                return RedirectToAction("GetResult");
             }
             else
             {
-                model.ProcessedImageUrl = json?.result?.imageUrl?.ToString();
-                model.Suggestions = json?.result?.suggestions?.ToString();
+                Console.WriteLine($"API Error: {jsonResponse}");
+                TempData["ErrorMessage"] = "Yapay zeka servisine bağlanılamadı. Lütfen tekrar deneyin.";
+                return View("Index");
             }
-
-            model.OriginalImageUrl = model.ImageUrl; // Orijinal resim URL'sini sakla
-
-            return View("Result", model);
         }
-        else
+        catch (Exception ex)
         {
-            // Hata durumunda yanıtı oku ve logla
-            var responseContent = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"API Error Response: {responseContent}");
-
-            TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyiniz.";
-            return View("Index", model);
+            Console.WriteLine($"Exception: {ex.Message}");
+            TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+            return View("Index");
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetResult()
+    {
+        string requestId = TempData["RequestId"]?.ToString();
+        string ApiKey = _configuration["MagicApi:ApiKey"];
+        string ApiUrl = $"{_configuration["MagicApi:BaseUrl"]}/predictions/{requestId}";
+
+        if (string.IsNullOrEmpty(requestId))
+        {
+            TempData["ErrorMessage"] = "Request ID bulunamadı.";
+            return View("Index");
+        }
+
+        try
+        {
+            var result = await CheckProcessingStatus(ApiUrl, ApiKey, requestId);
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                ViewData["ProcessedImageUrl"] = result;
+                return View("Result");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "İşlem başarısız oldu veya sonuç bulunamadı.";
+                return View("Index");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+            TempData["ErrorMessage"] = "Bir hata oluştu. Lütfen tekrar deneyin.";
+            return View("Index");
+        }
+    }
+
+    private async Task<string> CheckProcessingStatus(string apiUrl, string apiKey, string requestId)
+    {
+        var client = _httpClientFactory.CreateClient();
+        var requestMessage = new HttpRequestMessage(HttpMethod.Get, apiUrl);
+        requestMessage.Headers.Add("x-magicapi-key", apiKey);
+
+        try
+        {
+            var response = await client.SendAsync(requestMessage);
+            var jsonResponse = await response.Content.ReadAsStringAsync();
+
+            dynamic json = JsonConvert.DeserializeObject(jsonResponse);
+            string status = json?.status;
+            string result = json?.result;
+
+            Console.WriteLine($"Status: {status}");
+            Console.WriteLine($"Result: {result}");
+
+            if (status == "succeeded" && !string.IsNullOrEmpty(result))
+            {
+                return result;
+            }
+            else if (status == "starting" || status == "processing")
+            {
+                Console.WriteLine($"Status is {status}, retrying in 5 seconds...");
+                await Task.Delay(5000);
+                return await CheckProcessingStatus(apiUrl, apiKey, requestId);
+            }
+            else
+            {
+                Console.WriteLine($"Error: Status {status}, Result: {result}");
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception during status check: {ex.Message}");
+            return null;
+        }
+    }
 }
