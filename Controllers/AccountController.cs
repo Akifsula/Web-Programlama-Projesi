@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using KuaforYonetim.Models;
 using KuaforYonetim.ViewModels;
@@ -32,6 +32,7 @@ namespace KuaforYonetim.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync(); // Kullanıcıyı çıkış yaptırır
+            TempData["SuccessMessage"] = "Başarıyla çıkış yaptınız.";
             return RedirectToAction("Index", "Home"); // Ana sayfaya yönlendirir
         }
 
@@ -59,11 +60,14 @@ namespace KuaforYonetim.Controllers
                         var claimsIdentity = new ClaimsIdentity(claims, "Custom");
                         await HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
 
+                        // Başarılı giriş mesajı
+                        TempData["SuccessMessage"] = "Giriş başarılı! Hoş geldiniz.";
                         return RedirectToAction("Index", "Home");
                     }
                 }
 
-                ModelState.AddModelError(string.Empty, "Geçersiz giriş bilgileri.");
+                // Hatalı giriş mesajı
+                TempData["ErrorMessage"] = "Hatalı email veya şifre.";
             }
 
             return View(model);
@@ -89,6 +93,10 @@ namespace KuaforYonetim.Controllers
                     // Kullanıcıyı hemen giriş yaptır
                     await _userManager.AddClaimAsync(user, new Claim("AdSoyad", user.AdSoyad));
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
+
+                    // Başarılı kayıt mesajı
+                    TempData["SuccessMessage"] = "Kaydınız başarıyla oluşturuldu!";
 
                     return RedirectToAction("Index", "Home");
                 }
