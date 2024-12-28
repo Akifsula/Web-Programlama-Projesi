@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KuaforYonetim.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class YeniMigration1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

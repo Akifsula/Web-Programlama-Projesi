@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KuaforYonetim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241225231251_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241227185621_YeniMigration1")]
+    partial class YeniMigration1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

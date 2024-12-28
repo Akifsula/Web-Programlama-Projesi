@@ -55,3 +55,5 @@
 function closeModal() {
     document.getElementById('uygunlukModal').style.display = 'none';
 }
+
+ 

@@ -22,7 +22,6 @@ public class RandevuApiController : ControllerBase
     {
         try
         {
-            // Çalışanın uygunluk saatlerini getir
             var uygunluklar = await _context.CalisanUygunluklar
                 .Where(u => u.CalisanId == calisanId)
                 .ToListAsync();
@@ -32,7 +31,6 @@ public class RandevuApiController : ControllerBase
                 return NotFound("Bu çalışan için uygunluk bilgisi bulunamadı.");
             }
 
-            // Çalışanın onaylanmış randevularını al
             var doluRandevular = await _context.Randevular
                 .Where(r => r.CalisanId == calisanId && r.Durum == RandevuDurumu.Onaylandi)
                 .Select(r => r.Tarih)
@@ -42,27 +40,25 @@ public class RandevuApiController : ControllerBase
 
             foreach (var uygunluk in uygunluklar)
             {
-                // Çalışanın uygun olduğu saat aralığını hesapla
-                var uygunSaatAraligi = Enumerable.Range((int)uygunluk.BaslangicSaati.TotalHours,
-                                                         (int)(uygunluk.BitisSaati - uygunluk.BaslangicSaati).TotalHours)
-                                                 .Select(s => uygunluk.BaslangicSaati.Add(TimeSpan.FromHours(s)));
+                var baslangic = uygunluk.BaslangicSaati;
+                var bitis = uygunluk.BitisSaati;
 
-                // O günün dolu saatlerini al
                 var doluSaatler = doluRandevular
                     .Where(r => r.DayOfWeek == uygunluk.Gun)
                     .Select(r => r.TimeOfDay)
                     .ToHashSet();
 
-                // Uygun ve dolu olmayan saatleri hesapla
-                var musaitSaatler = uygunSaatAraligi
-                    .Where(saat => !doluSaatler.Contains(saat)) // Sadece dolu olmayan saatler
-                    .Select(saat => new
+                for (var saat = baslangic; saat < bitis; saat = saat.Add(TimeSpan.FromHours(1)))
+                {
+                    if (!doluSaatler.Contains(saat))
                     {
-                        Gun = uygunluk.Gun.ToString(),
-                        Saat = saat.ToString(@"hh\:mm")
-                    });
-
-                uygunSaatler.AddRange(musaitSaatler);
+                        uygunSaatler.Add(new
+                        {
+                            Gun = uygunluk.Gun.ToString(),
+                            Saat = saat.ToString(@"hh\:mm")
+                        });
+                    }
+                }
             }
 
             return Ok(uygunSaatler);
@@ -73,4 +69,6 @@ public class RandevuApiController : ControllerBase
             return StatusCode(500, "Sunucu hatası.");
         }
     }
+
+    // https://localhost:7100/api/Randevu/uygunluklar/1  adresiyle apiyi test edebilirsin.
 }
